@@ -1,7 +1,6 @@
 var ratesNotesDescription;
 let table;
 $(function() {
-    // Rates Note Editor
     ClassicEditor.create( document.querySelector( '#rates_notes' ) ).then( editor => {
         ratesNotesDescription = editor;
     }).catch( error => {
@@ -37,12 +36,7 @@ $(function() {
             {data: 'from_date', name: 'from_date',orderable: false},
             {data: 'to_date', name: 'to_date',orderable: false},
             {data: 'nightly_rate', name: 'nightly_rate',orderable: false},
-            {data: 'weekly_rate', name: 'weekly_rate',orderable: false},
-            {data: 'weekend_rates', name: 'weekend_rates',orderable: false},
-            {data: 'monthly_rate', name: 'monthly_rate',orderable: false},
             {data: 'minimum_stay', name: 'minimum_stay',orderable: false},
-            // {data: 'additional_person', name: 'additional_person',orderable: false},
-            // {data: 'other_fess', name: 'other_fess',orderable: false},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
     });
@@ -50,6 +44,7 @@ $(function() {
     $('#property_rates').on('error.dt', function(e, settings, techNote, message) {
         console.log( 'An error has been reported by DataTables: ', message);
     })
+    $(".dataTables_wrapper").css("width","100%");
     $('.mega-menu').on('click',function(){
         try {
            table.state.clear();
@@ -72,12 +67,7 @@ $(function() {
             'from_date':$("input[name=from_date]").val(),
             'to_date':$("input[name=to_date]").val(),
             'nightly_rate':$("input[name=nightly_rate]").val(),
-            'weekly_rate':$("input[name=weekly_rate]").val(),
-            'monthly_rates':$("input[name=monthly_rates]").val(),
             'minimum_stay':$("input[name=minimum_stay]").val(),
-            'additional_persons':$("input[name=additional_persons]").val(),
-            'other_fees':$("input[name=other_fees]").val(),
-            'weekend_rate':$("input[name=weekend_rate]").val(),
         };
         $.ajax({
             url:site_url+"/admin/property-listing/property-rates-store",
@@ -85,36 +75,36 @@ $(function() {
             data:formData,
             success:function(res){
                 hideLoader();
-
-                toastr.success(res.msg)
+                
                 if(res.status=='1'){
+                    toastr.success(res.msg)
                     table.draw()
-                 $("input[name=session_name]").val("");
-                 $("input[name=from_date]").val("");
-                 $("input[name=to_date]").val("");
-                 $("input[name=nightly_rate]").val("");
-                 $("input[name=weekly_rate]").val("");
-                 $("input[name=monthly_rates]").val("");
-                 $("input[name=minimum_stay]").val("");
-                 $("input[name=weekend_rate]").val("");
+                    $("input[name=session_name]").val("");
+                    $("input[name=from_date]").val("");
+                    $("input[name=to_date]").val("");
+                    $("input[name=nightly_rate]").val("");
+                    $("input[name=minimum_stay]").val("");
+                }else{
+                    toastr.error(res.msg)
+                    $("input[name=session_name]").val("");
+                    $("input[name=from_date]").val("");
+                    $("input[name=to_date]").val("");
+                    $("input[name=nightly_rate]").val("");
+                    $("input[name=minimum_stay]").val("");
                 }
             },error: function(xhr, ajaxOptions, thrownError){
                 hideLoader();
                 let error = xhr.responseJSON.errors;
-             $(".session_name").text("");
-             $(".from_date").text("");
-             $(".to_date").text("");
-             $(".nightly_rate").text("");
-             $(".weekly_rate").text("");
-             $(".monthly_rates").text("");
-             $(".minimum_stay").text("");
-             $(".session_name").text(error.session_name);
-             $(".from_date").text(error.from_date);
-             $(".to_date").text(error.to_date);
-             $(".nightly_rate").text(error.nightly_rate);
-             $(".weekly_rate").text(error.weekly_rate);
-             $(".monthly_rates").text(error.monthly_rates);
-             $(".minimum_stay").text(error.minimum_stay);
+                $(".session_name").text("");
+                $(".from_date").text("");
+                $(".to_date").text("");
+                $(".nightly_rate").text("");
+                $(".minimum_stay").text("");
+                $(".session_name").text(error.session_name);
+                $(".from_date").text(error.from_date);
+                $(".to_date").text(error.to_date);
+                $(".nightly_rate").text(error.nightly_rate);
+                $(".minimum_stay").text(error.minimum_stay);
             }
         })
     });
@@ -202,9 +192,6 @@ function editRentalRates(id) {
                 form.find("input[name=from_date]").val(res.data.from_date);
                 form.find("input[name=to_date]").val(res.data.to_date);
                 form.find("input[name=nightly_rate]").val(res.data.nightly_rate);
-                form.find("input[name=weekly_rate]").val(res.data.weekly_rate);
-                form.find("input[name=weekend_rate]").val(res.data.weekend_rates);
-                form.find("input[name=monthly_rate]").val(res.data.monthly_rate);
                 form.find("input[name=minimum_stay]").val(res.data.minimum_stay);
             }
         }
@@ -270,8 +257,3 @@ function rentalRatesDelete(id) {
         }
     });
 }
-
-$("input[name=from_date]").on("mouseout",function(){
-    $("input[name=to_date]").val($(this).val());
-    // alert();
-})

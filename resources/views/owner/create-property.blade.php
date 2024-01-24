@@ -118,9 +118,8 @@
                     </form>
                 </div>
                 {{-- Rental Rates Update Model start  --}}
-                <div class="modal fade" id="rental_rates_edit" tabindex="-1" role="dialog"
-                    aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
+                <div class="modal fade" id="rental_rates_edit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog  modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">Update Rental Rates Form</h5>
@@ -136,22 +135,19 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="session_name" class="col-form-label">Season Name:</label>
-                                                <input type="text" class="form-control" id="session_name"
-                                                    value="" name="session_name">
+                                                <input type="text" class="form-control" id="session_name" value="" name="session_name">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="from_date" class="col-form-label">From Date:</label>
-                                                <input type="date" class="form-control" id="from_date"
-                                                    name="from_date">
+                                                <input type="text" class="form-control" id="from_date" name="from_date" autocomplete="off">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="to_date" class="col-form-label">To Date:</label>
-                                                <input type="date" class="form-control" id="to_date" name="to_date"
-                                                    value="">
+                                                <input type="text" class="form-control" id="to_date" name="to_date" value="" autocomplete="off">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -163,30 +159,8 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="weekly_rate" class="col-form-label">Weekly Rate:</label>
-                                                <input type="text" class="form-control" id="weekly_rate"
-                                                    name="weekly_rate" value="">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="weekend_rate" class="col-form-label">Weekend Rate:</label>
-                                                <input type="text" class="form-control" id="weekend_rate"
-                                                    name="weekend_rate" value="weekend_rate">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="monthly_rate" class="col-form-label">Monthly Rate:</label>
-                                                <input type="text" class="form-control" id="monthly_rate"
-                                                    name="monthly_rate" value="">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
                                                 <label for="minimum_stay" class="col-form-label">Minimum Stay:</label>
-                                                <input type="text" class="form-control" id="minimum_stay"
-                                                    name="minimum_stay" value="">
+                                                <input type="text" class="form-control" id="minimum_stay" name="minimum_stay" value="">
                                             </div>
                                         </div>
                                     </div>
@@ -290,7 +264,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="start_date" class="col-form-label">Start Date</label>
-                                                <input type="date" class="form-control start_date" id="start_date" name="start_date" value="" readonly>
+                                                <input type="date" class="form-control start_date" id="start_date" name="start_date" value="">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -331,6 +305,50 @@
     </script>
     <script>
         $(document).ready(function(){
+            $('#start_date').datepicker({ 
+                defaultDate: "-1w",
+                dateFormat: "mm/dd/yy",
+                minDate: 0,
+                changeMonth: true,
+                numberOfMonths: 1,
+                changeYear: true,
+                onClose: function(selectedDate) {
+                    $("#end_date").datepicker("option", "minDate", selectedDate);
+                }
+            });
+            $('#end_date').datepicker({ 
+                dateFormat: "mm/dd/yy",
+                defaultDate: "-1w",
+                minDate: 0,
+                changeMonth: true,
+                numberOfMonths: 1,
+                changeYear: true,
+                onClose: function(selectedDate) {
+                    $("#end_date").datepicker("option", "maxDate", selectedDate);
+                }
+            });
+            $('#from_date').datepicker({ 
+                defaultDate: "-1w",
+                dateFormat: "mm/dd/yy",
+                minDate: 0,
+                changeMonth: true,
+                numberOfMonths: 1,
+                changeYear: true,
+                onClose: function(selectedDate) {
+                    $("#to_date").datepicker("option", "minDate", selectedDate);
+                }
+            });
+            $('#to_date').datepicker({ 
+                dateFormat: "mm/dd/yy",
+                defaultDate: "-1w",
+                minDate: 0,
+                changeMonth: true,
+                numberOfMonths: 1,
+                changeYear: true,
+                onClose: function(selectedDate) {
+                    $("#to_date").datepicker("option", "maxDate", selectedDate);
+                }
+            });
             getEvent();
         })
 

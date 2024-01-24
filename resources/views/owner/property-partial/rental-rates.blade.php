@@ -25,14 +25,14 @@
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="from_date">Start Date</label>
-                                            <input type="date" name="from_date" class="form-control">
+                                            <input type="text" name="from_date" class="form-control" id="start_date" autocomplete="off" placeholder="mm/dd/yy">
                                             <span class="from_date text-danger"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="to_date">End Date</label>
-                                            <input type="date" name="to_date" class="form-control">
+                                            <input type="text" name="to_date" class="form-control" id="end_date" autocomplete="off" placeholder="mm/dd/yy">
                                             <span class="to_date text-danger"></span>
                                         </div>
                                     </div>
@@ -45,42 +45,19 @@
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
-                                            <label for="weekly_rate"> Weekly Rate</label>
-                                            <input type="text" name="weekly_rate" class="form-control" id="weekly_rate">
-                                            <span class="weekly_rate text-danger"></span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="weekend_rate"> Weekend Rate</label>
-                                            <input type="text" name="weekend_rate" class="form-control" id="weekend_rate">
-                                            <span class="weekend_rate text-danger"></span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="monthly_rates">Monthly Rate</label>
-                                            <input type="text" name="monthly_rates" class="form-control">
-                                            <span class="monthly_rates text-danger"></span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
                                             <label for="minimum_stay">Minimum Stay</label>
                                             <input type="text" name="minimum_stay" class="form-control">
                                             <span class="minimum_stay text-danger"></span>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-2">
                                         <div class="form-group">
                                             <button type="button" class="btn btn-primary add_rates" style="margin-top:32px;">Add Rates</button>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="card-body p-6">
                                 <div class="table-responsive text-nowrap">
-                                    <table class="table table-striped table-bordered" style="width:100%" id="property_rates">
+                                    <table class="table table-striped table-bordered" style="width: 100%" id="property_rates">
                                         <thead>
                                             <tr>
                                                 <th>Sr No.</th>
@@ -88,9 +65,6 @@
                                                 <th>From Date</th>
                                                 <th>To Date</th>
                                                 <th>Nightly Rate</th>
-                                                <th>Weekly Rate</th>
-                                                <th>Weekend Rate</th>
-                                                <th>Monthly Rate</th>
                                                 <th>Minimum Stay</th>
                                                 <th>Action</th>
                                             </tr>
@@ -235,9 +209,7 @@
                                             <select name="all_rates_are_in" id="all_rates_are_in" class="form-control" style="width: 100%">
                                                 <option value="">Select Currency</option>
                                                 @foreach ($currencies as $currency)
-                                                    <option value="{{ $currency->id }}"
-                                                        @if (!empty($propertyListing)) @selected($currency->id == $propertyListing->currency_id) @endif>
-                                                        {{ $currency->currency_name }}</option>
+                                                    <option value="{{ $currency->id }}" @if (!empty($propertyListing)) @selected($currency->id == $propertyListing->currency_id) @endif>{{ $currency->currency_name }}</option>
                                                 @endforeach
                                             </select>
                                             <span class="all_rates_are_in text-danger"></span>

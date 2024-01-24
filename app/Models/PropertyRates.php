@@ -20,4 +20,11 @@ class PropertyRates extends Model
         'monthly_rate',
         'minimum_stay',
     ];
+
+    public function getFromDateAttribute($value) {
+        return date('m/d/Y',strtotime($value));
+    }
+    public function getToDateAttribute($value) {
+        return date('m/d/Y',strtotime($value));
+    }
 }

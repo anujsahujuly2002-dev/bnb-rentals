@@ -23,14 +23,11 @@ class PropertyRatesRequest extends FormRequest
     {
         return [
             "session_name"=>'required',
-           /*  "from_date"=>"required",
+            "from_date"=>"required",
             "to_date"=>"required",
             "nightly_rate"=>"required",
-            "weekly_rate"=>"required",
-            "monthly_rates"=>"required",
             "minimum_stay"=>"required",
-            "additional_persons"=>"required",
-            "other_fees"=>"required", */
+           
         ];
     }
 }

@@ -221,19 +221,17 @@ class PropertyListingController extends Controller
 
 
     public function propertyRateStore(PropertyRatesRequest $request) {
-       $propertyRates = PropertyRates::create([
+        $checkDates = PropertyRates::where('from_date','<=',Carbon::parse($request->input('from_date'))->format('Y-m-d'))->where('to_date','>=',Carbon::parse($request->input('to_date'))->format('Y-m-d'))->first();
+        if($checkDates !=null)
+        return response()->json(['status'=>0,'msg'=>"Already avaialble rate this duration"]);
+        $propertyRates = PropertyRates::create([
             "property_id"=>$request->input('property_listing_id'),
             "session_name"=>$request->input('session_name'),
-            "from_date"=>$request->input('from_date'),
-            "to_date"=>$request->input('to_date'),
+            "from_date"=>Carbon::parse($request->input('from_date'))->format('Y-m-d'),
+            "to_date"=>Carbon::parse($request->input('to_date'))->format('Y-m-d'),
             "nightly_rate"=>$request->input('nightly_rate'),
-            "weekly_rate"=>$request->input('weekly_rate'),
-            "weekend_rates"=>$request->input('weekend_rate'),
-            "monthly_rate"=>$request->input('monthly_rates'),
             "minimum_stay"=>$request->input('minimum_stay'),
-            "additional_person"=>$request->input('additional_persons'),
-            "other_fess"=>$request->input('other_fees'),
-       ]);
+        ]);
        if($propertyRates):
         return response()->json([
             'status'=>'1',
@@ -546,14 +544,14 @@ class PropertyListingController extends Controller
 
     // Update rental rates Method
     public function UpdateRentalRates(Request $request) {
+        $checkDates = PropertyRates::where('from_date','<=',Carbon::parse($request->input('from_date'))->format('Y-m-d'))->where('to_date','>=',Carbon::parse($request->input('to_date'))->format('Y-m-d'))->first();
+        if($checkDates !=null)
+        return response()->json(['status'=>0,'msg'=>"Already avaialble rate this duration"]);
         $propertyRates = PropertyRates::where('id',$request->input("id"))->update([
             'session_name'=>$request->input("session_name"),
-            'from_date'=>$request->input("from_date"),
-            'to_date'=>$request->input("to_date"),
+            'from_date'=>Carbon::parse($request->input("from_date"))->format('Y-m-d'),
+            'to_date'=>Carbon::parse($request->input("to_date"))->format('Y-m-d'),
             'nightly_rate'=>$request->input("nightly_rate"),
-            'weekly_rate'=>$request->input("weekly_rate"),
-            'weekend_rates'=>$request->input("weekend_rate"),
-            'monthly_rate'=>$request->input("monthly_rate"),
             'minimum_stay'=>$request->input("minimum_stay"),
         ]);
         if($propertyRates):
