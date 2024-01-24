@@ -1,0 +1,76 @@
+<?php
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "api" middleware group. Make something great!
+|
+*/
+
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+Route::controller(FrontendController::class)->group(function() {
+    Route::get('/property-listing','propertyListing');
+    Route::get('/property-details/{id}','propertyDetails');
+    Route::post('/booking-get-quote','bookingGetQoute');
+});
+
+Route::controller(CommonController::class)->group(function(){
+    Route::get('/get-role','getRole');
+    Route::get('/property-types','propertyTypes');
+    Route::get('/dashboard-property-types','dashboardPropertyTypes');
+    Route::get('/country','country');
+    Route::get('/state','state');
+    Route::get('/region','region');
+    Route::get('/city','city');
+    Route::get('/sub-city','subCity');
+    Route::get('/amenities','amenities');
+    Route::get('/currency','currency');
+    Route::get('/cancellention-policies','cancellentionPolicies');
+});
+
+Route::controller(AuthController::class)->group(function () {
+    Route::post('/registration','registration');
+    Route::post('/login','login');
+    Route::post('/forget-password-send-link','sendForgetPasswordLink')->name('send.forget.password.link');
+});
+
+Route::middleware('auth:api')->group(function() {
+    Route::controller(Dashboard::class)->group(function() {
+        Route::get('/logout','logout');
+    });
+    Route::controller(PropertyController::class)->prefix('property')->group(function(){
+        Route::post('/property-information','propertyInformation');
+        Route::post('store-amenities','storeAmenities');
+        Route::post('/location-store','locationStore');
+        Route::post('/rental-rates-store','rentalRatesStore');
+        Route::post('/additional-rental-rates','additionalRatesStore');
+        Route::post('/gallery-images','galleryImages');
+        Route::post('/rental-policies','rentalPolicies');
+        Route::post('/calender-syncronized','calenderSynchronization');
+        Route::post('/reviews','reviews');
+        Route::post('/add-wishlist','addWishList');
+        Route::post('/remove-wishlist','removeWishList');
+        Route::get('/wishlist','wishList');
+    });
+
+    Route::controller(ProfileController::class)->group(function() {
+        Route::post('/billing-details','billingDetails');
+        Route::get('/get-owner-billing-details','getOwnerBillingDetails');
+        Route::post('/update-owner-profile','updateOwnerProfile');
+        Route::get('/get-owner-profile-details','getOwnerProfileDetails');
+    });
+
+    Route::controller(BookingInformationController::class)->group(function() {
+        Route::post('/save-booking-details','storeBookingDetails');
+        Route::get('/my-booking-list','myBookingList');
+    });
+    
+});
