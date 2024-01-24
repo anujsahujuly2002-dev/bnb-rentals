@@ -22,7 +22,8 @@ class PropertyListingRequestStepThree extends FormRequest
     public function rules(): array
     {
         return [
-            "rates"=>'required'
+            "rates"=>'required',
+            'tax_rates'=>'required'
         ];
     }
 }

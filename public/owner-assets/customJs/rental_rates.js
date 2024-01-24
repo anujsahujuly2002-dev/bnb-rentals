@@ -165,6 +165,8 @@ $(".rental_rates").on('click',function(e){
             let error = xhr.responseJSON.errors;
             $(".all_rates_are_in").text("");
             $(".all_rates_are_in").text(error.rates);
+            $(".tax_rates").text("");
+            $(".tax_rates").text(error.tax_rates);
         }
     });
 })

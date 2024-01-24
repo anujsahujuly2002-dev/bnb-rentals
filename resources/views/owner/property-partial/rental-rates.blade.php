@@ -77,7 +77,7 @@
                             </div>
                             <div class="card-body p-6">
                                 <div class="row">
-                                    <div class="col-md-2">
+                                    {{-- <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="admin_fees">Admin Fee</label>
                                             <input type="text" name="admin_fees"
@@ -85,7 +85,7 @@
                                                 value="{{ $propertyListing->admin_fees ?? '' }}">
                                             <span class="admin_fees text-danger"></span>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="cleaning_fees">Cleaning Fees</label>
@@ -93,14 +93,14 @@
                                             <span class="cleaning_fees text-danger"></span>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="refundable_damage_deposite">Refundable Damage Deposit</label>
                                             <input type="text" name="refundable_damage_deposite" class="form-control"  id="refundable_damage_deposite" value="{{ $propertyListing->refundable_damage_deposite ?? '' }}">
                                             <span  class="refundable_damage_deposite text-danger"></span>
                                         </div>
                                     </div>
-                                    <div class="col-md-2">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="danage_waiver">Damage Waiver</label>
                                             <input type="text" name="danage_waiver" class="form-control" id="danage_waiver" value="{{ $propertyListing->danage_waiver ?? '' }}">
@@ -184,7 +184,7 @@
                                         <div class="form-group">
                                             <label for="tax_rates">Tax Rates (%)</label>
                                             <input type="text" name="tax_rates" class="form-control" id="tax_rates" placeholder="Tax Rates(%)" value="{{ $propertyListing->tax_rates ?? '' }}">
-                                            <span class="check_out text-danger"></span>
+                                            <span class="tax_rates text-danger"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
