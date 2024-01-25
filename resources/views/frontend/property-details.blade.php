@@ -770,6 +770,7 @@
 <script src="{{asset('frontend-assets/js/custom/calender-avaliblity.js')}}"></script>
 <script>
     $(document).ready(function(){
+        disableddates = {!!App\Http\Helper\Helper::getPropertyBookingDate($PropertyListing->id)!!};
         calenderAvailability("","{{$PropertyListing->id}}");
     })
 </script>

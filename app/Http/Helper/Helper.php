@@ -254,5 +254,21 @@ class Helper {
         return "$".$propertyRates->nightly_rate;
     }
 
+    public static function getPropertyBookingDate($property_id){
+        ini_set('memory_limit', -1);
+        $selectedDate = [];
+        $propertyBookings = PropertyBooking::where('property_id',$property_id)->get();
+        foreach($propertyBookings as $propertyBooking):
+            $startdate =$propertyBooking->start_date;
+            $enddate = $propertyBooking->end_date;
+            $dateRange = CarbonPeriod::create(Carbon::parse($startdate)->addDays(1),Carbon::parse($enddate)->subDays(1) );
+            $days = array_map(fn ($date) => $date->format('d-m-Y'), iterator_to_array($dateRange));
+            foreach( $days as $day):
+                $selectedDate[] = $day;
+            endforeach;
+        endforeach;
+        return json_encode($selectedDate);
+    }
+
 
 }

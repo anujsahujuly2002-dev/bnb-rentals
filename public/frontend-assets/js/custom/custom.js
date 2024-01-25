@@ -1,8 +1,12 @@
 // Date Picker intilizition
-
+function DisableSpecificDates(date) {
+    var string = jQuery.datepicker.formatDate('dd-mm-yy', date);
+    return [disableddates.indexOf(string) == -1];
+}
 $(function() {
     $('#check_in').datepicker({ 
         defaultDate: "-1w",
+        beforeShowDay: DisableSpecificDates,
         // dateFormat: "yy-dd-mm",
         minDate: 0,
         changeMonth: true,
@@ -14,6 +18,7 @@ $(function() {
     $('#check_out').datepicker({ 
         // dateFormat: "yy-dd-mm",
         defaultDate: "-1w",
+        beforeShowDay: DisableSpecificDates,
         minDate: 0,
         changeMonth: true,
         numberOfMonths: 1,
