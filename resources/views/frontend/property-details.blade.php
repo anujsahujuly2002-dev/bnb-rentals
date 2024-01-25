@@ -245,7 +245,7 @@
                     <section class="pt-6 border-bottom pb-4">
                         <h4 class="fs-22 text-heading mb-4">Availability</h4>
                         <div class="container">
-                            <div class="row no-gutters">
+                            <div class="row">
                                 <div id="Calendars">
 
                                 </div>

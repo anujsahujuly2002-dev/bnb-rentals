@@ -21768,10 +21768,10 @@ height: 300px;
 }
 .calendar_book_last:after {
     position: absolute;
-    bottom: 10px;
-    right: 10px;
-    width: 60px;
-    height: 60px;
+    bottom: 13px;
+    right: 15px;
+    width: 70px;
+    height: 70px;
     content: '';
     background: #00ffdc;
     z-index: -1;
@@ -21787,9 +21787,9 @@ height: 300px;
 .calendar_book_first:before {
     position: absolute;
     bottom: -35px;
-    right: -30px;
-    width: 60px;
-    height: 60px;
+    right: -36px;
+    width: 70px;
+    height: 70px;
     content: '';
     background: #05dcff;
     z-index: -1;
@@ -21806,7 +21806,15 @@ height: 300px;
     color: #fff;
 }
 
-
+.calendar-section div small {
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -5px;
+    font-style: italic;
+    font-size: 10px;
+}
 
 
 
