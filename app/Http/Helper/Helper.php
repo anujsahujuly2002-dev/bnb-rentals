@@ -3,6 +3,7 @@ namespace App\Http\Helper;
 use Carbon\Carbon;
 use App\Models\Chat;
 use Carbon\CarbonPeriod;
+use App\Models\PropertyRates;
 use App\Models\PropertyBooking;
 use App\Models\PropertyListing;
 use App\Models\PropertiesAminites;
@@ -52,11 +53,7 @@ class Helper {
             $calnders .= '<button class="switch-month switch-left">  <i class="fa fa-chevron-left"></i></button>';
         endif;
         $calnders.='<h2>'.self::get_month($curr_month).' - '.$curr_year.'</h2>';    
-        // if($currentdateofmk < $currentdateofmkcurrent):
-            $calnders .='<button class="switch-month switch-right" onclick="calenderAvailability('.date('Ymd',strtotime('+2 month',$currentdateofmk)).','.$property_id.')"> <i class="fa fa-chevron-right"></i></button>';
-        // else:
-        //     $calnders .='<button class="switch-month switch-right"> <i class="fa fa-chevron-right"></i></button>';
-        // endif;
+        $calnders .='<button class="switch-month switch-right" onclick="calenderAvailability('.date('Ymd',strtotime('+2 month',$currentdateofmk)).','.$property_id.')"> <i class="fa fa-chevron-right"></i></button>';
         $calnders.='</div><div class="calendar_weekdays"><div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div></div>';
         $curr_month_days=self::get_month_days($curr_month,$curr_year);
         $days_before=date("w",mktime("0","0","0",$curr_month,1,$curr_year));
@@ -78,19 +75,18 @@ class Helper {
                 $this_days = $this_day.'-'.$curr_month.'-'.$curr_year;
                 if(in_array($this_days,$days)):
                     if($days_type[$this_day] == "3"):
-                        $calnders .='<div class="calendar_days_outofservice">'.($count-$days_before+1).'</div>';
-                       
+                        $calnders .='<div class="calendar_days_outofservice">'.($count-$days_before+1).'<small>'.self::getRatePerday($property_id,Carbon::parse($this_days)->format('Y-m-d')).'</small><br></div>';
                     elseif(($unique_this_day[$this_days] > 1) && in_array($curr_month,self::$gb_date['start_month']) && in_array($curr_year,self::$gb_date['start_year'])):
-                        $calnders .='<div  class="calendar_same_day_arrive_depart">'.($count-$days_before+1).'</div>';
+                        $calnders .='<div  class="calendar_same_day_arrive_depart">'.($count-$days_before+1).'<small>'.self::getRatePerday($property_id,Carbon::parse($this_days)->format('Y-m-d')).'</small><br></div>';
                     elseif(in_array($this_days,self::$gb_date['start_day'])):
-                        $calnders .='<div  class="calendar_book_first">'.($count-$days_before+1).'</div>';
+                        $calnders .='<div  class="calendar_book_first">'.($count-$days_before+1).'<small>'.self::getRatePerday($property_id,Carbon::parse($this_days)->format('Y-m-d')).'</small><br></div>';
                     elseif(in_array($this_days,self::$gb_date['end_day'])):
-                        $calnders .='<div  class="calendar_book_last">'.($count-$days_before+1).'</div>';
+                        $calnders .='<div  class="calendar_book_last">'.($count-$days_before+1).'<small>'.self::getRatePerday($property_id,Carbon::parse($this_days)->format('Y-m-d')).'</small><br></div>';
                     else:
-                        $calnders .='<div  class="calendar_days_unavailable">'.($count-$days_before+1).'</div>';
+                        $calnders .='<div  class="calendar_days_unavailable">'.($count-$days_before+1).'<small>'.self::getRatePerday($property_id,Carbon::parse($this_days)->format('Y-m-d')).'</small><br></div>';
                     endif;
                 else:
-                    $calnders .='<div class="calendar_days_available">'.($count-$days_before+1).'</div>';
+                    $calnders .='<div class="calendar_days_available">'.($count-$days_before+1).'<small>'.self::getRatePerday($property_id,Carbon::parse($this_days)->format('Y-m-d')).'</small><br></div>';
                 endif;
             endif;
             if($count%7==6):
@@ -249,6 +245,13 @@ class Helper {
 
         return Chat::where(['reciver_id'=>$userId,'status'=>"0",'sender_id'=>$reciverId])->count();
 
+    }
+
+    public static function getRatePerday($property_id,$date) {
+        $propertyRates =  PropertyRates::where(['property_id'=>$property_id])->where('from_date', '<=',$date)->where('to_date','>=',$date)->first();
+        if($propertyRates ==null)
+        return  "";
+        return "$".$propertyRates->nightly_rate;
     }
 
 

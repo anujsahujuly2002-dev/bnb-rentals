@@ -19,11 +19,7 @@ return new class extends Migration
             $table->date('from_date');
             $table->date('to_date');
             $table->double('nightly_rate', 8, 2)->nullable();
-            $table->double('weekly_rate', 8, 2)->nullable();
-            $table->double('monthly_rate', 8, 2)->nullable();
             $table->string('minimum_stay')->nullable();
-            // $table->string('additional_person');
-            // $table->double('other_fess');
             $table->softDeletes();
             $table->timestamps();
         });
