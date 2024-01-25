@@ -138,11 +138,10 @@
 							</div>
 							<div class="form-group mb-4">
 								<label for="username" class="sr-only">Phone</label>
-
 								<div class="row">
 									<div class="col-3 p-0">
 										<div class="input-group input-group-lg">
-											<select class="form-control">
+											<select class="form-control" name="country_code">
 												<option value="">Select Country Code</option>
 												<option value="93">+93/Afghanistan</option>
 												<option value="355">+355/Albania</option>
@@ -369,7 +368,7 @@
 												<option value="263">+263/Zimbabwe</option>
 											</select>
 										</div>
-
+										<span class="country_code_error text-danger"></span>
 									</div>
 									<div class="col-9 p-0">
 										<div class="input-group input-group-lg">

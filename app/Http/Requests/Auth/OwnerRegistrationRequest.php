@@ -24,6 +24,7 @@ class OwnerRegistrationRequest extends FormRequest
         return [
             'full_name'=>'required',
             'username'=>'required|unique:users,email,'.$this->id,
+            'country_code'=>'required',
             'phone'=>'required',
             'password'=>['required',
                         'min:8',

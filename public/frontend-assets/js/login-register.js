@@ -13,10 +13,12 @@ $("#owner-register-form").on("submit",function(e){
             console.log(res);
             if(res.status=='1'){
                 toastr.success(res.msg);
-                window.setTimeout(() => {
-                    window.location.href=res.url; 
-                 }, 2000);
-
+                // window.setTimeout(() => {
+                //     window.location.href=res.url; 
+                //  }, 2000);
+                $('#owner-register-form')[0].reset();
+                $("#login-register-modal").modal('show');
+                $('#myTab a[href="#login"]').tab('show')
             }else{
                 toastr.error(res.msg);
             }
@@ -24,6 +26,7 @@ $("#owner-register-form").on("submit",function(e){
             hideLoader();
             $(".full_name_error").text("");
             $(".username_error").text("");
+            $(".country_code_error").text("");
             $(".phone_error").text("");
             $(".password_error").text("");
             $(".cnf_password_error").text("");
@@ -32,6 +35,7 @@ $("#owner-register-form").on("submit",function(e){
             let error = xhr.responseJSON.errors;
             $(".full_name_error").text(error.full_name);
             $(".username_error").text(error.username);
+            $(".country_code_error").text(error.country_code);
             $(".phone_error").text(error.phone);
             $(".password_error").text(error.password);
             $(".cnf_password_error").text(error.cnf_password);
