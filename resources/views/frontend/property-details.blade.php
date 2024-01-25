@@ -771,6 +771,7 @@
 <script>
     $(document).ready(function(){
         disableddates = {!!App\Http\Helper\Helper::getPropertyBookingDate($PropertyListing->id)!!};
+        ratesIsAvailable = {!!App\Http\Helper\Helper::getPropertyRatesWhichDate($PropertyListing->id)!!};  
         calenderAvailability("","{{$PropertyListing->id}}");
     })
 </script>

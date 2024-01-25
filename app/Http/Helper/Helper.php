@@ -270,5 +270,23 @@ class Helper {
         return json_encode($selectedDate);
     }
 
+    public static function getPropertyRatesWhichDate($property_id) {
+        ini_set('memory_limit', -1);
+        $selectedDate = [];
+        $propertyBookings = PropertyRates::where('property_id',$property_id)->get();
+        foreach($propertyBookings as $propertyBooking):
+            $startdate =$propertyBooking->from_date;
+            $enddate = $propertyBooking->to_date;
+            $dateRange = CarbonPeriod::create(Carbon::parse($startdate)->addDays(1),Carbon::parse($enddate)->subDays(1) );
+            $days = array_map(fn ($date) => $date->format('d-m-Y'), iterator_to_array($dateRange));
+            foreach( $days as $day):
+                $propertyRates =  PropertyRates::where(['property_id'=>$property_id])->where('from_date', '<=',Carbon::parse($day)->format('Y-m-d'))->where('to_date','>=',Carbon::parse($day)->format('Y-m-d'))->first();
+                if($propertyRates !=null)
+                $selectedDate[] = $day;
+            endforeach;
+        endforeach;
+        return json_encode($selectedDate);
+    }
+
 
 }

@@ -1,13 +1,29 @@
 // Date Picker intilizition
-function DisableSpecificDates(date) {
-    var string = jQuery.datepicker.formatDate('dd-mm-yy', date);
-    return [disableddates.indexOf(string) == -1];
-}
+// function DisableSpecificDates(date) {
+//     var string = jQuery.datepicker.formatDate('dd-mm-yy', date);
+//     return [disableddates.indexOf(string) == -1];
+// }
+// function checkRatesIsAvailable(date) {
+//     var string = jQuery.datepicker.formatDate('dd-mm-yy', date);
+//     return [ratesIsAvailable.indexOf(string) == -1];
+// }
 $(function() {
     $('#check_in').datepicker({ 
         defaultDate: "-1w",
-        beforeShowDay: DisableSpecificDates,
-        // dateFormat: "yy-dd-mm",
+        beforeShowDay: function (date) {
+            var string = jQuery.datepicker.formatDate('dd-mm-yy', date);
+             // check if date is in your array of dates
+             console.log(ratesIsAvailable.indexOf(string) );
+            if(disableddates.indexOf(string) == -1 && ratesIsAvailable.indexOf(string) != -1) {
+                return [true, '', ''];
+            }
+            else {
+
+                return [false, '', ''];
+            }
+
+        },
+        changeYear: true,
         minDate: 0,
         changeMonth: true,
         numberOfMonths: 1,
@@ -16,9 +32,21 @@ $(function() {
         }
     });
     $('#check_out').datepicker({ 
-        // dateFormat: "yy-dd-mm",
+        changeYear: true,
         defaultDate: "-1w",
-        beforeShowDay: DisableSpecificDates,
+        beforeShowDay: function (date) {
+            var string = jQuery.datepicker.formatDate('dd-mm-yy', date);
+             // check if date is in your array of dates
+             console.log(ratesIsAvailable.indexOf(string) );
+            if(disableddates.indexOf(string) == -1 && ratesIsAvailable.indexOf(string) != -1) {
+                return [true, '', ''];
+            }
+            else {
+
+                return [false, '', ''];
+            }
+
+        },
         minDate: 0,
         changeMonth: true,
         numberOfMonths: 1,
@@ -48,9 +76,7 @@ $(function() {
     });
 });
 
-
 // Rate Summery 
-
 calcuateRate = async () => {
     showLoader();
     if($("#check_in").val() ==''){
