@@ -77,7 +77,7 @@ class Helper {
                     if($days_type[$this_day] == "3"):
                         $calnders .='<div class="calendar_days_outofservice">'.($count-$days_before+1).'<small>'.self::getRatePerday($property_id,Carbon::parse($this_days)->format('Y-m-d')).'</small><br></div>';
                     elseif(($unique_this_day[$this_days] > 1) && in_array($curr_month,self::$gb_date['start_month']) && in_array($curr_year,self::$gb_date['start_year'])):
-                        $calnders .='<div  class="calendar_same_day_arrive_depart">'.($count-$days_before+1).'<small>'.self::getRatePerday($property_id,Carbon::parse($this_days)->format('Y-m-d')).'</small><br></div>';
+                        $calnders .='<div  class="calendar_book_first calendar_book_last">'.($count-$days_before+1).'<small>'.self::getRatePerday($property_id,Carbon::parse($this_days)->format('Y-m-d')).'</small><br></div>';
                     elseif(in_array($this_days,self::$gb_date['start_day'])):
                         $calnders .='<div  class="calendar_book_first">'.($count-$days_before+1).'<small>'.self::getRatePerday($property_id,Carbon::parse($this_days)->format('Y-m-d')).'</small><br></div>';
                     elseif(in_array($this_days,self::$gb_date['end_day'])):

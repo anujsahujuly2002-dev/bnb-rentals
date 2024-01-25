@@ -14,6 +14,7 @@ class PropertyBooking extends Model
         "start_date",
         "end_date",
         "events",
-        "booking_time_stamps"
+        "booking_time_stamps",
+        'type'
     ];
 }

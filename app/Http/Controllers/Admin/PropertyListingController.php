@@ -2,35 +2,36 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\PropertyType;
+use Exception;
+use Carbon\Carbon;
+use App\Models\City;
+use App\Models\User;
+use App\Models\State;
+use App\Models\Cities;
+use App\Models\Region;
 use App\Models\Country;
+use App\Models\Currency;
+use Carbon\CarbonPeriod;
+use App\Models\ImportIcal;
 use App\Models\MainAminity;
-use App\Http\Requests\PropertyListing\PropertyListingRequestStepOne;
-use App\Http\Requests\PropertyListing\PropertyRatesRequest;
-use App\Http\Requests\PropertyListing\PropertyListingRequestStepThree;
-use App\Models\CancellentionPolicy;
+use App\Models\PropertyType;
+use App\Models\SubAminities;
+use Illuminate\Http\Request;
+use App\Models\PropertyRates;
+use App\Models\PropertyBooking;
+use App\Models\PropertyGallery;
 use App\Models\PropertyListing;
 use App\Models\PropertiesAminites;
-use App\Models\SubAminities;
-use App\Models\PropertyRates;
-use App\Models\Currency;
-use App\Models\PropertyGallery;
-use App\Models\PropertyBooking;
+use App\Models\CancellentionPolicy;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Models\PropertyReviewsRating;
-use App\Models\State;
-use App\Models\Region;
-use App\Models\City;
-use App\Models\Cities;
-use App\Models\User;
-use Carbon\Carbon;
-use App\Models\ImportIcal;
-use Yajra\DataTables\Facades\DataTables;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Auth;
-use Exception;
+use Yajra\DataTables\Facades\DataTables;
+use App\Http\Requests\PropertyListing\PropertyRatesRequest;
+use App\Http\Requests\PropertyListing\PropertyListingRequestStepOne;
+use App\Http\Requests\PropertyListing\PropertyListingRequestStepThree;
 
 class PropertyListingController extends Controller
 {
@@ -389,7 +390,7 @@ class PropertyListingController extends Controller
 
     public function calenderSynchronization(Request $request) {
         try{
-            $ical_response = file_get_contents($request->input('import_calender_url'));
+            $ical_response = @file_get_contents($request->input('import_calender_url'));
             $icsDates = array ();
             $icsData = explode ( "BEGIN:", $ical_response );
             foreach ( $icsData as $key => $value ) {
@@ -408,16 +409,16 @@ class PropertyListingController extends Controller
                 $endDate = date("Y-m-d h:i:s",strtotime($icsDate['DTEND;VALUE=DATE']));
                 $events = $icsDate['SUMMARY'];
                 $check_booking_date = PropertyBooking::where(['property_id'=>$request->input('property_listing_id'),'start_date'=>Carbon::parse($startDate),'end_date'=>Carbon::parse($endDate)])->first();
-               if(is_null($check_booking_date)):
-                $property_booking =  PropertyBooking::create([
-                    "property_id" =>$request->input('property_listing_id'),
-                    "start_date" =>$startDate,
-                    "end_date" =>$endDate,
-                    "events" =>$events,
-                    "booking_time_stamps" =>$dateTimeStamp
-                ]);
+                if(is_null($check_booking_date)):
+                    $property_booking =  PropertyBooking::create([
+                        "property_id" =>$request->input('property_listing_id'),
+                        "start_date" =>$startDate,
+                        "end_date" =>$endDate,
+                        "events" =>$events,
+                        "booking_time_stamps" =>$dateTimeStamp,
+                        'type'=>'0'
+                    ]);
                endif;
-
             endforeach;
             if($property_booking):
                 ImportIcal::create([
@@ -746,8 +747,14 @@ class PropertyListingController extends Controller
     public function blockManualBooking(Request $request) {
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
-        $check_booking_date = PropertyBooking::where('property_id',$request->input('property_id'))->where([['start_date', '>=', date($startDate)], ['end_date', '<=', date($endDate)] ])->get();
-        if($check_booking_date->count() > 0):
+        $exstingBooking = [];
+        $dateRange = CarbonPeriod::create(Carbon::parse($startDate)->addDays(1),Carbon::parse($endDate)->subDays(1) );
+        $days = array_map(fn ($date) => $date->format('d-m-Y'), iterator_to_array($dateRange));
+        foreach( $days as $day):
+            $exstingBooking[] =PropertyBooking::where('property_id',$request->input('property_id'))->where([['start_date', '>=', Carbon::parse($day)->format('Y-m-d h:i:s')], ['end_date', '<=', Carbon::parse($day)->format('Y-m-d h:i:s')] ])->first();
+        endforeach;
+        // dd($exstingBooking); 
+        if(count($exstingBooking) > 0 && $exstingBooking[0] !=null):
            return response()->json([
                 'status'=>500,
                 "msg"=>"Some dates are already booked,Choose available dates only."
@@ -755,11 +762,11 @@ class PropertyListingController extends Controller
         endif;
         $property_booking =  PropertyBooking::create([
             "property_id" =>$request->input('property_id'),
-            "start_date" =>$request->input('start_date'),
-            "end_date" =>$request->input('end_date'),
+            "start_date" => Carbon::parse($startDate)->format('Y-m-d h:i:s'),
+            "end_date" =>Carbon::parse($endDate)->format('Y-m-d h:i:s'),
             "events" =>$request->input('customer_name'),
             "booking_time_stamps" =>date('Y-m-d h:i:s'),
-            "booking_source"=>"0"
+            'type'=>'1'
         ]);
         if($property_booking):
             return response()->json([

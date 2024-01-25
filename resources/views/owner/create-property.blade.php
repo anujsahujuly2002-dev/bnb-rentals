@@ -398,13 +398,20 @@
                     $("#bookingEvent").modal('hide');
                     toastr.success(results.msg);
                 }else if(results.status==500){
+                    $("#createManualBookings")[0].reset();
+                    $("#bookingEvent").modal('hide');
                     hideLoader();
                     toastr.error( results.msg);
                 }else{
+                    $("#createManualBookings")[0].reset();
+                    $("#bookingEvent").modal('hide');
                     hideLoader();
                     toastr.error( response.statusText);
                 }
             }catch(err){
+                hideLoader();
+                $("#createManualBookings")[0].reset();
+                $("#bookingEvent").modal('hide');
                 toastr.error(err.message);
                 console.log(err.message);
             }
