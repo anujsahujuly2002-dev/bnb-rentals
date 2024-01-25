@@ -197,65 +197,6 @@
 
                     </section>
                     <section class="pt-6 border-bottom pb-4">
-                        <h4 class="fs-22 text-heading mb-4">Rates</h4>
-                        <table class="responsive-table" cellspacing="0" cellpadding="0">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Rate Period</th>
-                                    <th scope="col">Nightly</th>
-                                    <th scope="col">Weekend Night</th>
-                                    <th scope="col">Weekly</th>
-                                    <th scope="col">Monthly</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if (!empty($PropertyListing->property_rates))
-                                @foreach ($PropertyListing->property_rates as $propertyRates)
-                                <tr>
-                                    <td data-title="Rate Period">{{ $propertyRates->session_name }} {{ date('jS M,
-                                        Y',strtotime($propertyRates->from_date)) }} to {{ date('jS M,
-                                        Y',strtotime($propertyRates->to_date)) }}
-                                        <br>- {{ $propertyRates->minimum_stay }} nights min stay
-                                    </td>
-                                    <td data-title="Nightly">@if($PropertyListing->currency->currency_name =='EURO') €
-                                        @elseif($PropertyListing->currency->currency_name=='AUD')
-                                        &#x20B3;@elseif($PropertyListing->currency->currency_name=='USD') &#36; @endif
-                                        {{ (float)$propertyRates->nightly_rate }}</td>
-                                    <td data-title="Weekend Night">
-                                        @if($propertyRates->weekend_rates !=NULL)
-                                        @if($PropertyListing->currency->currency_name =='EURO') €
-                                        @elseif($PropertyListing->currency->currency_name=='AUD')
-                                        &#x20B3;@elseif($PropertyListing->currency->currency_name=='USD') &#36; @endif
-                                        {{ (float)$propertyRates->weekend_rates }}
-                                        @else
-                                        -
-                                        @endif
-                                    </td>
-                                    <td data-title="Weekly">
-                                        @if($propertyRates->weekly_rate !=NULL)
-                                        @if($PropertyListing->currency->currency_name =='EURO') €
-                                        @elseif($PropertyListing->currency->currency_name=='AUD')
-                                        &#x20B3;@elseif($PropertyListing->currency->currency_name=='USD') &#36; @endif
-                                        {{ (float)$propertyRates->weekly_rate }}
-                                        @else
-                                        -
-                                        @endif
-                                    </td>
-                                    <td data-title="Monthly *">
-                                        @if($propertyRates->monthly_rate !=NULL)
-                                        @if($PropertyListing->currency->currency_name =='EURO') €
-                                        @elseif($PropertyListing->currency->currency_name=='AUD')
-                                        &#x20B3;@elseif($PropertyListing->currency->currency_name=='USD') &#36; @endif
-                                        {{ (float)$propertyRates->monthly_rate }}
-                                        @else
-                                        -
-                                        @endif
-                                    </td>
-                                </tr>
-                                @endforeach
-                                @endif
-                            </tbody>
-                        </table>
                         <div class="additional-rates">
                             <ul class="list-inline" style="padding-left:0">
                                 @if($PropertyListing->admin_fees !=null ) <li>Admin Fees:<span> &#36; {{
