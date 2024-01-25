@@ -305,6 +305,7 @@
     </script>
     <script>
         $(document).ready(function(){
+            ratesIsAvailable = {!!App\Http\Helper\Helper::getPropertyRatesWhichDate($propertyListing->id??"")!!};  
             $('#start_date').datepicker({ 
                 defaultDate: "-1w",
                 dateFormat: "mm/dd/yy",
@@ -312,6 +313,19 @@
                 changeMonth: true,
                 numberOfMonths: 1,
                 changeYear: true,
+                beforeShowDay: function (date) {
+                    var string = jQuery.datepicker.formatDate('dd-mm-yy', date);
+                    // check if date is in your array of dates
+                    console.log(ratesIsAvailable.indexOf(string) );
+                    if(ratesIsAvailable.indexOf(string) == -1) {
+                        return [true, '', ''];
+                    }
+                    else {
+
+                        return [false, '', ''];
+                    }
+
+                },
                 onClose: function(selectedDate) {
                     $("#end_date").datepicker("option", "minDate", selectedDate);
                 }
@@ -323,6 +337,18 @@
                 changeMonth: true,
                 numberOfMonths: 1,
                 changeYear: true,
+                beforeShowDay: function (date) {
+                    var string = jQuery.datepicker.formatDate('dd-mm-yy', date);
+                    // check if date is in your array of dates
+                    if(ratesIsAvailable.indexOf(string) == -1) {
+                        return [true, '', ''];
+                    }
+                    else {
+
+                        return [false, '', ''];
+                    }
+
+                },
                 onClose: function(selectedDate) {
                     $("#end_date").datepicker("option", "maxDate", selectedDate);
                 }
