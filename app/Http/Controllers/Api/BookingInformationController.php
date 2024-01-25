@@ -200,7 +200,8 @@ class BookingInformationController extends Controller
                         'start_date' =>$bookingInformation->check_in??$checkInDate,
                         'end_date' =>$bookingInformation->check_out??$checkOutDate,
                         'events' =>$bookingInformation->user->name??$checkBooking->user->name.'- Reserved',
-                        'booking_time_stamps'=>Carbon::now()
+                        'booking_time_stamps'=>Carbon::now(),
+                        'type'=>"0",
                     ]);
                 else:
                     $message_text = 'There were some issue with the payment. Please try again later.';

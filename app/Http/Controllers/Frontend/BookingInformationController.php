@@ -222,7 +222,8 @@ class BookingInformationController extends Controller
                         'start_date' =>Carbon::parse($bookingInformation->check_in)->format('Y-m-d h:i:s'),
                         'end_date' =>Carbon::parse($bookingInformation->check_out)->format('Y-m-d h:i:s'),
                         'events' =>$bookingInformation->user->name.'- Reserved',
-                        'booking_time_stamps'=>Carbon::now()
+                        'booking_time_stamps'=>Carbon::now(),
+                        'type'=>'0'
                     ]);
                     auth()->user()->notify(New BookingInformationNotification($propertyListing,$bookingInformation,$owner->name,auth()->user()->name,auth()->user()->getRoleNames()->first(),$request->input('payment_type'),$payableAmount,$nextPaymentDate));
                     $owner->notify(New BookingInformationNotification($propertyListing,$bookingInformation,auth()->user()->name,auth()->user()->name,$owner->getRoleNames()->first(),$request->input('payment_type'),$payableAmount,$nextPaymentDate));
