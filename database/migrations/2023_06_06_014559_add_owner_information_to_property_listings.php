@@ -23,7 +23,8 @@ return new class extends Migration
             $table->string("owner_zipcode")->nullable()->after('owner_state');
             $table->string("owner_owner_fax")->nullable()->after('owner_zipcode');
             $table->string("owner_profile_image")->nullable()->after('owner_owner_fax');
-            // $table->enum('status',['0','1'])->default(0)->comment("1=Active,0-inactive")->nullable()->after('owner_profile_image');
+            $table->date('subscription_date')->after('owner_profile_image')->nullable();
+            $table->enum('approval',['0','1'])->after('subscription_date')->default('0')->comment('0=Inactive,1=Active');
         });
     }
 
