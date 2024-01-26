@@ -33,9 +33,15 @@
 							<a class="nav-link p-0" href="{{ route('frontend.partner.listing') }}">Partner Listings</a>
 						</li>
 						@if(auth()->check())
+						@role(['Traveller','Owner'])
 						<li class="nav-item py-2 py-lg-5 px-0 px-lg-4"> 
 							<a class="nav-link p-0" href="@if(auth()->user()->getRoleNames()->first() =='Traveller'){{route('traveller.dashboard')}}@else {{route('owner.dashboard')}} @endif">Dashboard</a>
 						</li>
+						@elserole('super-admin')
+						<li class="nav-item py-2 py-lg-5 px-0 px-lg-4"> 
+							<a class="nav-link p-0" data-toggle="modal" href="#login-register-modal">Owner Login</a>
+						</li>
+						@endrole
 						@else
 							<li class="nav-item py-2 py-lg-5 px-0 px-lg-4"> 
 								<a class="nav-link p-0" data-toggle="modal" href="#login-register-modal">Owner Login</a>
