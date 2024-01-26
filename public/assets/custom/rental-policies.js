@@ -6,11 +6,11 @@ $(function () {
     }).catch( error => {
         console.error( error );
     });
-    ClassicEditor.create( document.querySelector( '#cancel_polices' ) ).then( editor => {
-        cancelPolicesDescription = editor;
-    }).catch( error => {
-        console.error( error );
-    });
+    // ClassicEditor.create( document.querySelector( '#cancel_polices' ) ).then( editor => {
+    //     cancelPolicesDescription = editor;
+    // }).catch( error => {
+    //     console.error( error );
+    // });
 })
 
 $(".rental_policies").on("click",function(){

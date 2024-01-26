@@ -37,9 +37,9 @@ $(function() {
             {data: 'from_date', name: 'from_date',orderable: false},
             {data: 'to_date', name: 'to_date',orderable: false},
             {data: 'nightly_rate', name: 'nightly_rate',orderable: false},
-            {data: 'weekly_rate', name: 'weekly_rate',orderable: false},
+            /* {data: 'weekly_rate', name: 'weekly_rate',orderable: false},
             {data: 'weekend_rates', name: 'weekend_rates',orderable: false},
-            {data: 'monthly_rate', name: 'monthly_rate',orderable: false},
+            {data: 'monthly_rate', name: 'monthly_rate',orderable: false}, */
             {data: 'minimum_stay', name: 'minimum_stay',orderable: false},
             // {data: 'additional_person', name: 'additional_person',orderable: false},
             // {data: 'other_fess', name: 'other_fess',orderable: false},
@@ -129,7 +129,7 @@ $(".rental_rates").on('click',function(){
     nextStepWizard = $('div.setup-panel div a[href="#' + curStepBtn + '"]').parent().next().children("a");
     let formData = {
         "property_listing_id":$("input[name=property_listing_id]").val(),
-        "admin_fees":$("input[name=admin_fees]").val(),
+        // "admin_fees":$("input[name=admin_fees]").val(),
         "cleaning_fees":$("input[name=cleaning_fees]").val(),
         "refundable_damage_deposite":$("input[name=refundable_damage_deposite]").val(),
         "danage_waiver":$("input[name=danage_waiver]").val(),
@@ -161,6 +161,8 @@ $(".rental_rates").on('click',function(){
             let error = xhr.responseJSON.errors;
             $(".all_rates_are_in").text("");
             $(".all_rates_are_in").text(error.rates);
+            $(".rates").text("");
+            $(".rates").text(error.tax_rates);
         }
     });
 })

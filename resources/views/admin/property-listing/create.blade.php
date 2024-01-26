@@ -425,27 +425,27 @@ Create Property
 									<span class="nightly_rate text-danger"></span>
 								</div>
 							</div>
-							<div class="col-md-2">
+							{{-- <div class="col-md-2">
 								<div class="form-group">
 									<label for="weekly_rate">Weekly Rate</label>
 									<input type="text" name="weekly_rate" class="form-control" id="weekly_rate">
 									<span class="weekly_rate text-danger"></span>
 								</div>
-							</div>
-							<div class="col-md-2">
+							</div> --}}
+							{{-- <div class="col-md-2">
 								<div class="form-group">
 									<label for="weekend_rate">Weekend Rate</label>
 									<input type="text" name="weekend_rate" class="form-control" id="weekend_rate">
 									<span class="weekend_rate text-danger"></span>
 								</div>
-							</div>
-							<div class="col-md-2">
+							</div> --}}
+							{{-- <div class="col-md-2">
 								<div class="form-group">
 									<label for="monthly_rates">Monthly Rate</label>
 									<input type="text" name="monthly_rates" class="form-control">
 									<span class="monthly_rates text-danger"></span>
 								</div>
-							</div>
+							</div> --}}
 							<div class="col-md-2">
 								<div class="form-group">
 									<label for="minimum_stay">Minimum Stay</label>
@@ -453,7 +453,7 @@ Create Property
 									<span class="minimum_stay text-danger"></span>
 								</div>
 							</div>
-							<div class="col-md-6">
+							<div class="col-md-2">
 								<div class="form-group">
 									<button type="button" class="btn btn-primary add_rates" style="margin-top:32px;">Add Rates</button>
 								</div>
@@ -467,9 +467,9 @@ Create Property
 											<th>From Date</th>
 											<th>To Date</th>
 											<th>Nightly Rate</th>
-											<th>Weekly Rate</th>
+											{{-- <th>Weekly Rate</th>
 											<th>Weekend Rate</th>
-											<th>Monthly Rate</th>
+											<th>Monthly Rate</th> --}}
 											<th>Minimum Stay</th>
 											<th>Action</th>
 										</tr>
@@ -479,13 +479,13 @@ Create Property
 							<div class="col-md-12">
 								<h4>Fees - Define your fees, like cleaning, etc.</h4>
 							</div>
-							<div class="col-md-2">
+							{{-- <div class="col-md-2">
 								<div class="form-group">
 									<label for="admin_fees">Admin Fee</label>
 									<input type="text" name="admin_fees" class="form-control" id="admin_fees" value="{{ $propertyListing->admin_fees??"" }}">
 									<span class="admin_fees text-danger"></span>
 								</div>
-							</div>
+							</div> --}}
 							<div class="col-md-2">
 								<div class="form-group">
 									<label for="cleaning_fees">Cleaning Fees</label>
@@ -592,7 +592,7 @@ Create Property
 								<div class="form-group">
 									<label for="tax_rates">Tax Rates (%)</label>
 									<input type="text" name="tax_rates" class="form-control" id="tax_rates" placeholder="Tax Rates(%)" value="{{ $propertyListing->tax_rates??"" }}">
-									<span class="check_out text-danger"></span>
+									<span class="rates text-danger"></span>
 								</div>
 							</div>
 							<div class="col-md-6">
