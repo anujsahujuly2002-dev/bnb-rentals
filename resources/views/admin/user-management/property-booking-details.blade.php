@@ -24,9 +24,9 @@
                             <div class="card-body">
                             <div class="customfilter">
                                 <ul>
-                                    <li><a href="javascript:void(0)" class="active">Upcoming Bookings : <span>(20)</span></a></li>
-                                    <li><a href="javascript:void(0)">Ongoing Bookings : <span>(05)</span></a></li>
-                                    <li><a href="javascript:void(0)">Payment Due Pending : <span>(10)</span></a></li>
+                                    <li><a href="javascript:void(0)" class="active upcomming" onclick="upCommingBooking()">Upcoming Bookings : <span>(20)</span></a></li>
+                                    <li><a href="javascript:void(0)" class="ongoing" onclick="onGoingBooking()">Ongoing Bookings : <span>(05)</span></a></li>
+                                    <li><a href="javascript:void(0)" class="payment" onclick="paymentDue()">Payment Due Pending : <span>(10)</span></a></li>
                                 </ul>
                             </div>
                                 <div class="table-responsive">
@@ -58,8 +58,10 @@
 @endsection
 @push('js')
 <script>
+    var table
+    var bookingType = "";
    $(function () {
-    var table = $('#property_booking').DataTable({
+     table= $('#property_booking').DataTable({
         "language": {
         "zeroRecords": "No record(s) found.",
          searchPlaceholder: "Search records"
@@ -76,6 +78,9 @@
        scrollX: true,
         ajax:{
             url:"{{route('admin.property.booking_details')}}",
+            data:function(d){
+                d.bookingType=bookingType
+            }
         },
         dataType: 'html',
         columns: [
@@ -105,7 +110,30 @@
     $(".search").on('click',function(){
         table.draw();
     })
-  });
+});
+function upCommingBooking() {
+    bookingType ="upcomming-booking";
+    $(".payment").removeClass('active');
+    $(".ongoing").removeClass('active');
+    $(".upcomming").addClass('active');
+    table.draw();
+}
+function onGoingBooking() {
+    bookingType ="ongoing-booking";
+    $(".ongoing").addClass('active');
+    $(".payment").removeClass('active');
+    $(".upcomming").removeClass('active');
+    table.draw();
+}
+function paymentDue() {
+    bookingType ="payment-due";
+    $(".ongoing").removeClass('active');
+    $(".upcomming").removeClass('active');
+    $(".payment").addClass('active');
+    table.draw();
+}
+
+  
 
 </script>
     

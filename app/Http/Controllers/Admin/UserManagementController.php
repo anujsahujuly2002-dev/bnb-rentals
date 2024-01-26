@@ -96,7 +96,20 @@ class UserManagementController extends Controller
                 $owner->whereHas('property',function($property){
                     $property->where('user_id',auth()->user()->id);
                 });
-            })->latest()->where('status','confirmed')->get();
+            })->where('status','confirmed');
+            if($request->input('bookingType') == 'upcomming-booking'):
+                $paymentTransaction =$paymentTransaction->where('check_out','>',now()->format('Y-m-d'))->orderBy('check_in','ASC');
+            endif;
+            if($request->input('bookingType') == 'payment-due'):
+                $paymentTransaction=$paymentTransaction->whereNot('dues_amount','0');
+            endif;
+            if($request->input('bookingType') == 'payment-due'):
+                $paymentTransaction=$paymentTransaction->whereNot('dues_amount','0');
+            endif;
+            if($request->input('bookingType') == ''):
+                $paymentTransaction->latest();
+            endif;
+           
             return DataTables::of($paymentTransaction)
             ->addIndexColumn()
             ->editColumn('paid_amount',function($row){
@@ -106,6 +119,11 @@ class UserManagementController extends Controller
                 $url=route('admin.property.booking.details',base64_encode($row->id));
                 $actionBtn = '<a href="'.$url.'" class="edit btn btn-success btn-sm" onclick="viewDetails('.$row->id.')">View Details</a> ';
                 return $actionBtn;
+            })
+            ->filter(function ($instance) use ($request){
+                if($request->input('bookingType') == 'upcomming-booking'):
+                    $instance->orderBy('check_in','ASC');
+                endif;
             })
             ->rawColumns(['paid_amount','action'])
             ->make(true);

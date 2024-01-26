@@ -32,7 +32,7 @@ class AuthController extends Controller
        ];
 
        if(auth()->attempt($creditials)):
-        if(auth()->user()->getRoleNames()->first() =='Owner'):
+        if(auth()->user()->getRoleNames()->first() =='Owner' || auth()->user()->getRoleNames()->first() =='Traveller'):
             Session::flush();
             Auth::logout();
             return response()->json([
