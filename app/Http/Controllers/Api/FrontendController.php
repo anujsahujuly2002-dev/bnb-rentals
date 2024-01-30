@@ -94,7 +94,7 @@ class FrontendController extends Controller
             'check_out'=>$propertyDeatails->check_out,
             'tax_rates'=>$propertyDeatails->tax_rates,
             'change_over'=>$propertyDeatails->change_over,
-            'rental_policies'=>strip_tags($propertyDeatails->rental_policies),
+            'rental_policies'=>$propertyDeatails->rental_policies,
             'cancelletion_policies'=>[
                 'name'=>$propertyDeatails->cancelletionPolicies->name,
                 'description'=>$propertyDeatails->cancelletionPolicies->description,
@@ -174,8 +174,8 @@ class FrontendController extends Controller
        foreach($bookings as $booking):
             $bookingDatesArr []  =[
                 'start_date'=>$booking->start_date,
-                'end_date'=>$booking->start_date,
-                'events'=>$booking->start_date,
+                'end_date'=>$booking->end_date,
+                'events'=>$booking->events,
             ];
        endforeach;
        return $bookingDatesArr;
