@@ -71,6 +71,8 @@ Route::middleware('auth:api')->group(function() {
     Route::controller(BookingInformationController::class)->group(function() {
         Route::post('/save-booking-details','storeBookingDetails');
         Route::get('/my-booking-list','myBookingList');
+        Route::get('/booking-details/{id}','bookingDetails');
+        Route::post('/pay-remening-balance','payRemeningBalance');
     });
     
 });

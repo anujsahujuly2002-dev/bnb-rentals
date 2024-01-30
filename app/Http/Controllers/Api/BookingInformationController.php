@@ -273,4 +273,136 @@ class BookingInformationController extends Controller
             'data'=>$bookingList
         ]);
     }
+
+    public function bookingDetails(Request $request){
+        $bookingInformation = BookingInformation::where('id',$request->id)->first();
+        $bookingDetails[] =[
+            'id'=>$bookingInformation->id,
+            'name'=>auth()->user()->getRoleNames()->first()=='Traveller'?$bookingInformation->property->user->name:$bookingInformation->user->name,
+            'phone'=>auth()->user()->getRoleNames()->first()=='Traveller'?$bookingInformation->property->user->phone:$bookingInformation->user->phone,
+            'address'=>auth()->user()->getRoleNames()->first()=='Traveller'?$bookingInformation->property->address:"",
+            'property_id'=>$bookingInformation->property->id,
+            'property_name'=>$bookingInformation->property->property_name,
+            'check_in' =>$bookingInformation->check_in,
+            'check_out' =>$bookingInformation->check_out,
+            'adults' =>$bookingInformation->total_guest,
+            'children' =>$bookingInformation->total_children,
+            'booking_summry'=>$bookingInformation->booking_summary,
+            'total_amount'=>$bookingInformation->total_amount,
+            'guest_paid'=>($bookingInformation->total_amount - $bookingInformation->dues_amount),
+            'payment_type'=>$bookingInformation->payment_type,
+            'cancellention_policy'=>[
+                $bookingInformation->cancelletionPolicies->name,
+                $bookingInformation->cancelletionPolicies->description,
+                $bookingInformation->cancelletionPolicies->note,
+            ],
+            'next_payment_date'=>$bookingInformation->next_payment_date
+        ];
+
+        return response()->json([
+            'status'=>true,
+            'msg'=>"Booking details fetched successfully",
+            'data'=>$bookingDetails,
+           
+        ]);
+    }
+
+    public function payRemeningBalance(Request $request){
+        $bookingInformation =  BookingInformation::where('id',$request->input('id'))->first();
+        $totalAmount =  BookingInformation::where('id',$request->input('id'))->first()->dues_amount;
+        $merchantAuthentication = new AnetAPI\MerchantAuthenticationType();
+        $merchantAuthentication->setName(env('MERCHANT_LOGIN_ID'));
+        $merchantAuthentication->setTransactionKey(env('MERCHANT_TRANSACTION_KEY'));
+        $refId = 'ref' . time();
+        $cardNumber = preg_replace('/\s+/', '', $request->input('card_number'));
+        $creditCard = new AnetAPI\CreditCardType();
+        $creditCard->setCardNumber($cardNumber);
+        $creditCard->setExpirationDate($request->input('expiry_year') . "-" .$request->input('expiry_month'));
+        $creditCard->setCardCode($request->input('cvv_pin'));
+        $paymentOne = new AnetAPI\PaymentType();
+        $paymentOne->setCreditCard($creditCard);
+        // Create a TransactionRequestType object and add the previous objects to it
+        $transactionRequestType = new AnetAPI\TransactionRequestType();
+        $transactionRequestType->setTransactionType("authCaptureTransaction");
+        $transactionRequestType->setAmount($totalAmount);
+        $transactionRequestType->setPayment($paymentOne);
+        $requests = new AnetAPI\CreateTransactionRequest();
+        $requests->setMerchantAuthentication($merchantAuthentication);
+        $requests->setRefId($refId);
+        $requests->setTransactionRequest($transactionRequestType);
+        $controller = new AnetController\CreateTransactionController($requests);
+        $response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::PRODUCTION);
+        if($response !=null):
+            // Check to see if the API request was successfully received and acted upon
+            if($response->getMessages()->getResultCode() == "Ok"):
+                $tresponse = $response->getTransactionResponse();
+                if ($tresponse != null && $tresponse->getMessages() != null) {
+                    $message_text = $tresponse->getMessages()[0]->getDescription().", Transaction ID: " .$tresponse->getTransId() ;
+                    $msg_type = "success_msg";    
+                    $redirectUrl = route('traveller.booking');
+                    BookingPaymentTransactionHistory::create([
+                        'booking_information_id'=>$bookingInformation->id,
+                        'pay_amount'=>$totalAmount,
+                        'transaction_id'=>$tresponse->getTransId(),
+                        'payment_response'=>json_encode($tresponse),
+                        'status'=>'success'
+                    ]);
+                    BookingInformation::where('id',$bookingInformation->id)->update([
+                        'dues_amount'=>$bookingInformation->dues_amount-$totalAmount,
+                    ]);
+                } else {
+                    BookingPaymentTransactionHistory::create([
+                        'booking_information_id'=>$bookingInformation->id,
+                        'pay_amount'=>$totalAmount,
+                        'transaction_id'=>$tresponse->getTransId(),
+                        'payment_response'=>json_encode($tresponse),
+                        'status'=>'failed'
+                    ]);
+                    $message_text = 'There were some issue with the payment. Please try again later.';
+                    $msg_type = "error_msg";                                    
+
+                    if ($tresponse->getErrors() != null) {
+                        $message_text = $tresponse->getErrors()[0]->getErrorText();
+                        $msg_type = "error_msg";                                    
+                    }
+                }
+                // Or, print errors if the API request wasn't successful
+            else:
+                $message_text = 'There were some issue with the payment. Please try again later.';
+                $msg_type = "error_msg";                                    
+                $tresponse = $response->getTransactionResponse();
+                BookingPaymentTransactionHistory::create([
+                    'booking_information_id'=>$bookingInformation->id,
+                    'pay_amount'=>$totalAmount,
+                    'transaction_id'=>$tresponse->getTransId(),
+                    'payment_response'=>json_encode($tresponse),
+                    'status'=>'failed'
+                ]);
+                if ($tresponse != null && $tresponse->getErrors() != null) {
+                    $message_text = $tresponse->getErrors()[0]->getErrorText();
+                    $msg_type = "error_msg";                    
+                } else {
+                    $message_text = $response->getMessages()->getMessage()[0]->getText();
+                    $msg_type = "error_msg";
+                }  
+            endif;
+        else:
+            $message_text = "No response returned";
+            $msg_type = "error_msg";
+        endif;
+
+        if($msg_type=='success_msg'):
+            return response()->json([
+                'status'=>true,
+                'msg'=>$message_text
+            ],200);
+            // return to_route('payment.success')->with('success',$message_text);
+        else:
+            session()->put('error',$message_text);
+            return response()->json([
+                'status'=>false,
+                'msg'=>$message_text,
+            ],500);
+        endif;
+    }
 }
