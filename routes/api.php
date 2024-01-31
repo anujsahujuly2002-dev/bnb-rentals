@@ -79,5 +79,6 @@ Route::middleware('auth:api')->group(function() {
     Route::controller(CancelBookingController::class)->group(function() {
         Route::get('/cancellention-reason-list','cancellentionReasonList');
         Route::post('/cancel-booking','cancelBooking');
+        Route::get('/cancel-booking-list','cancelBookingList');
     });
 });

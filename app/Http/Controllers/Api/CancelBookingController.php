@@ -92,4 +92,31 @@ class CancelBookingController extends Controller
     private function dates($value) {
         return $value*60*60/86400;
     }
+
+    public function cancelBookingList() {
+        $cancelBookingList =[];
+        $cancelBookings = CancelBooking::when(auth()->user()->roles()->first()->name=='Traveller',function($traveller){
+            $traveller->whereHas('bookingInformation',function ($u){
+                $u->where('user_id',auth()->user()->id)->where('status','cancelled');
+            });
+        })->with('bookingInformation')->orderBy('id','desc')->get();
+        foreach($cancelBookings as $cancelBooking):
+            $cancelBookingList[] = [
+                'id'=>$cancelBooking->id,
+                'booking_id'=>$cancelBooking->booking_id,
+                'check_in'=>$cancelBooking->bookingInformation->check_in,
+                'check_out'=>$cancelBooking->bookingInformation->check_out,
+                'total_booking_fees'=>$cancelBooking->bookingInformation->total_amount,
+                'paid_amount'=>$cancelBooking->bookingInformation->total_amount-$cancelBooking->bookingInformation->dues_amount,
+                'refund_amount'=>$cancelBooking->refundable_amount,
+                'cancel_reason'=>$cancelBooking->cancellentionReason->name,
+                'cancel_date'=>$cancelBooking->created_at
+            ];
+        endforeach;
+        return response()->json([
+            'status'=>true,
+            'msg'=>"Cancellation Booking List",
+            'data'=>$cancelBookingList
+        ]);
+    }
 }
