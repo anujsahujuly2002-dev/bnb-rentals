@@ -405,4 +405,24 @@ class BookingInformationController extends Controller
             ],500);
         endif;
     }
+
+
+    public function transactionHistory() {
+        // dd(auth()->user()->roles()->first());
+        $paymentTransaction = BookingPaymentTransactionHistory::when(auth()->user()->roles()->first()->name=='Traveller',function($traveller){
+            $traveller->whereHas('bookingInformation',function($bookingInformation){
+                $bookingInformation->where('user_id',auth()->user()->id);
+            });
+        })->when(auth()->user()->roles()->first()->name=='Owner',function($owner){
+            $owner->whereHas('property',function($property){
+                $property->where('user_id',auth()->user()->id);
+            });
+        })->where('status','success')->get(['transaction_id','pay_amount','created_at']);
+       return response()->json([
+            'status'=>true,
+            'msg'=>"Payment Transaction History Successfully",
+            'data'=>$paymentTransaction
+       ]);
+
+    }
 }

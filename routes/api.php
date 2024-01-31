@@ -74,6 +74,7 @@ Route::middleware('auth:api')->group(function() {
         Route::get('/my-booking-list','myBookingList');
         Route::get('/booking-details/{id}','bookingDetails');
         Route::post('/pay-remening-balance','payRemeningBalance');
+        Route::get('/transaction-history','transactionHistory');
     });
     
     Route::controller(CancelBookingController::class)->group(function() {
