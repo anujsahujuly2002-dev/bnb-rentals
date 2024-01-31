@@ -315,7 +315,6 @@
                 beforeShowDay: function (date) {
                     var string = jQuery.datepicker.formatDate('dd-mm-yy', date);
                     // check if date is in your array of dates
-                    console.log(ratesIsAvailable.indexOf(string) );
                     if(ratesIsAvailable.indexOf(string) == -1) {
                         return [true, '', ''];
                     }
