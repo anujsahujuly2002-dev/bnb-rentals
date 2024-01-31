@@ -156,5 +156,52 @@ class CommonController extends Controller
 
     }
 
+    public function destinationList(Request $request) {
+        $wordSuggestion = [];
+        $countries =Country::where('name', 'LIKE', strtolower($request->input('value')) . '%')->distinct()->get();
+        $states =State::where('name', 'LIKE', strtolower($request->input('value')) . '%')->distinct()->get();
+        $regions =Region::where('name', 'LIKE', strtolower($request->input('value')) . '%')->distinct() ->get();
+        $cities =City::where('name', 'LIKE', strtolower($request->input('value')) . '%')->distinct()->get();
+        $subCities = Cities::where('name', 'LIKE', strtolower($request->input('value')) . '%')->distinct()->get();
+        if($countries->count() >0):
+            foreach($countries as $country):
+                $wordSuggestion []= strlen($country?->name)<=3?strtoupper($country?->name):ucfirst($country?->name);
+            endforeach;
+        endif;
+        if($states->count() >0):
+            foreach($states as $state):
+                $country = strlen($state->country->name) <=3?strtoupper($state->country->name):ucfirst($state->country->name);
+                $wordSuggestion []= ucfirst($state->name).','.$country;
+            endforeach;
+        endif;
+        if($regions->count() >0):
+            foreach($regions as $region):
+                $country = strlen($region->country->name) <=3?strtoupper($region->country->name):ucfirst($region->country->name);
+                $state = ucfirst($region->state->name);
+                $wordSuggestion []= ucfirst($region->name).','.$state.','.$country;
+            endforeach;
+        endif;
+        if($cities->count() >0):
+            foreach($cities as $city):
+                $country = strlen($city->country->name) <=3?strtoupper($city->country->name):ucfirst($city->country->name);
+                $state = ucfirst($city->state->name);
+                $region = ucfirst($city->region->name);
+                $wordSuggestion []= ucfirst($city->name).','.$region.','.$state.','.$country;
+            endforeach;
+        endif;
+        if($subCities->count()>0):
+            foreach($subCities as $subCity):
+                $country = strlen($subCity->country->name) <=3?strtoupper($subCity->country->name):ucfirst($subCity->country->name);
+                $state = ucfirst($subCity->state->name);
+                $region = ucfirst($subCity->region->name);
+                $city= ucfirst($subCity->city->name);
+                $wordSuggestion []= ucfirst($subCity->name).','.$city.','.$region.','.$state.','.$country;
+            endforeach;
+        endif;
+        return response()->json([
+            'data' => $wordSuggestion
+        ]);
+    }
+
 
 }

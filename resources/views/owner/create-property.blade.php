@@ -300,8 +300,7 @@
     <script src="{{ asset('owner-assets/customJs/reviews_rating.js') }}"></script>
     <script src="{{ asset('owner-assets/js/map.js') }}"></script>
     {{-- <script src="{{asset('assets/custom/map.js')}}"></script> --}}
-    <script async
-        src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_KEY') }}&libraries=places&callback=initMap">
+    <script async src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_KEY') }}&libraries=places&callback=initMap&solution_channel=GMP_QB_addressselection_v1_cABC">
     </script>
     <script>
         $(document).ready(function(){

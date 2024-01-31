@@ -317,7 +317,7 @@ class BookingInformationController extends Controller
         $cardNumber = preg_replace('/\s+/', '', $request->input('card_number'));
         $creditCard = new AnetAPI\CreditCardType();
         $creditCard->setCardNumber($cardNumber);
-        $creditCard->setExpirationDate($request->input('expiry_year') . "-" .$request->input('expiry_month'));
+        $creditCard->setExpirationDate("20".$request->input('expire_year') . "-" .$request->input('expire_month'));
         $creditCard->setCardCode($request->input('cvv_pin'));
         $paymentOne = new AnetAPI\PaymentType();
         $paymentOne->setCreditCard($creditCard);
@@ -374,7 +374,7 @@ class BookingInformationController extends Controller
                 BookingPaymentTransactionHistory::create([
                     'booking_information_id'=>$bookingInformation->id,
                     'pay_amount'=>$totalAmount,
-                    'transaction_id'=>$tresponse->getTransId(),
+                    // 'transaction_id'=>$tresponse->getTransId(),
                     'payment_response'=>json_encode($tresponse),
                     'status'=>'failed'
                 ]);

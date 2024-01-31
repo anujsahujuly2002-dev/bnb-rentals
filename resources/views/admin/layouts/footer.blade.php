@@ -57,7 +57,7 @@
                 sidebarPosition: "fixed"
             });
         })(jQuery);
-        $(".alert-block").delay(3200).fadeOut(300);
+            
         function showLoader(){
             $("#loader").removeClass('d-none');
         }

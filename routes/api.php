@@ -34,6 +34,7 @@ Route::controller(CommonController::class)->group(function(){
     Route::get('/amenities','amenities');
     Route::get('/currency','currency');
     Route::get('/cancellention-policies','cancellentionPolicies');
+    Route::get('/destination-list','destinationList');
 });
 
 Route::controller(AuthController::class)->group(function () {
