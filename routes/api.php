@@ -1,5 +1,5 @@
 <?php
-use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -76,4 +76,8 @@ Route::middleware('auth:api')->group(function() {
         Route::post('/pay-remening-balance','payRemeningBalance');
     });
     
+    Route::controller(CancelBookingController::class)->group(function() {
+        Route::get('/cancellention-reason-list','cancellentionReasonList');
+        Route::post('/cancel-booking','cancelBooking');
+    });
 });
