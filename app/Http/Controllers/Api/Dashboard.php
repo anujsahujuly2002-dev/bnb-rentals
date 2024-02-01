@@ -17,5 +17,18 @@ class Dashboard extends Controller
         ], 200);
     }
 
+    public function changeUserType(Request $request){
+        if(auth()->user()->roles()->first()->id ==$request->input('role_id'))
+        return response()->json([
+            'status'=>false,
+            'msg'=>'Not Allowed change the role'
+        ]);
+        auth()->user()->roles()->sync([$request->input('role_id')]);
+        return response()->json([
+            'status'=>true,
+            'msg'=>'Role Changed Sucessfully'
+        ]); 
+    }
+
 
 }
