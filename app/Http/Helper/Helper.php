@@ -7,7 +7,10 @@ use App\Models\PropertyRates;
 use App\Models\PropertyBooking;
 use App\Models\PropertyListing;
 use App\Models\PropertiesAminites;
+use App\Models\SmsApiLog;
+use Exception;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Http;
 
 class Helper {
     static $gb_date;
@@ -286,6 +289,30 @@ class Helper {
             endforeach;
         endforeach;
         return json_encode($selectedDate);
+    }
+
+    public static function sendSms($mobileNo,$message) {
+        try{
+            $response = Http::withHeaders([
+                'Authorization'=>"Bearer ".env('SMS_TOKEN')
+            ])->post('https://api.telnyx.com/v2/messages',[
+                'from'=>"+18889191772",
+                'to'=>$mobileNo,
+                'text'=>$message
+            ]);
+            SmsApiLog::create([
+                'api_url'=>"https://api.telnyx.com/v2/messages",
+                'request'=>json_encode([
+                    'from'=>"+18889191772",
+                    'to'=>$mobileNo,
+                    'text'=>$message
+                ]),
+                'response'=>json_encode(json_decode($response->body(),true))
+            ]);
+        }catch (Exception $e){
+            return $e->getMessage();
+        }
+        
     }
 
 

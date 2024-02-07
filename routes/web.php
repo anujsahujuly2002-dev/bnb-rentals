@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -63,7 +64,6 @@ Route::namespace('Frontend')->group(function() {
         Route::post('/store','cancelBookingStore')->name('cancel.booking.store');
         Route::get('/list','cancelBookingList')->name('cancel.bokking.list');
     });
-
 });
 
 

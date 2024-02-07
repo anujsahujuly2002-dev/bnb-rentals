@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Models\User;
+use App\Http\Helper\Helper;
 use Illuminate\Http\Request;
 use App\Mail\OwnerRegistrationMail;
 use App\Http\Controllers\Controller;
 use App\Mail\OwnerRegistrationEmail;
-use Illuminate\Support\Facades\Auth;
 // use Symfony\Component\HttpFoundation\Session\Session;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use App\Http\Requests\Auth\OwnerLoginRequest;
@@ -27,6 +28,8 @@ class AuthController extends Controller
         ];
         $user = User::create( $userDetails);
         $user->notify(New RegistrationNotification($userDetails));
+        $message = "Welcome to MY BNB RENTALS ! \r\r Congratulations! Your account is all set up and ready to go. We're thrilled to have you on board.\r\r Thank you for choosing My BNB RENTALS! We look forward to providing you with a great experience.";
+        Helper::sendSms("+".$request->input('country_code').$request->input('phone'),$message);
         $user->assignRole($request->input('type'));
         if($request->ajax()):
             if($user):
