@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 use Carbon\Carbon;
 use App\Models\User;
 use Carbon\CarbonPeriod;
+use App\Http\Helper\Helper;
 use Illuminate\Http\Request;
 use App\Models\PropertyRates;
 use App\Models\PropertyBooking;
@@ -203,7 +204,6 @@ class BookingInformationController extends Controller
                 if($tresponse != null && $tresponse->getMessages() != null):
                     $message_text = $tresponse->getMessages()[0]->getDescription()." Transaction ID: " .$tresponse->getTransId() ;
                     $msg_type = "success_msg";  
-                    // dd($bookingInformation);
                     BookingPaymentTransactionHistory::create([
                         'booking_information_id'=>$bookingInformation->id,
                         'pay_amount'=>$payableAmount,
@@ -227,6 +227,10 @@ class BookingInformationController extends Controller
                     ]);
                     auth()->user()->notify(New BookingInformationNotification($propertyListing,$bookingInformation,$owner->name,auth()->user()->name,auth()->user()->getRoleNames()->first(),$request->input('payment_type'),$payableAmount,$nextPaymentDate));
                     $owner->notify(New BookingInformationNotification($propertyListing,$bookingInformation,auth()->user()->name,auth()->user()->name,$owner->getRoleNames()->first(),$request->input('payment_type'),$payableAmount,$nextPaymentDate));
+                    $travellerMessage ="Thank you for choosing MY BNB Rentals! Your booking for Property ID".$propertyListing->id." on ".date('M dS Y',strtotime($bookingInformation->check_in))." is confirmed. \r\r We look forward to serving you!";
+                    $ownerMessage = "You have a new booking! on Property ID".$propertyListing->id."\r\r Need more details log in to your dashboard.\r\rThank you for using MY BNB RENTALS !";
+                    Helper::sendSms("+".auth()->user()->phone,$travellerMessage);
+                    Helper::sendSms("+".$owner->phone,$ownerMessage);
                 else:
                     BookingPaymentTransactionHistory::create([
                         'booking_information_id'=>$bookingInformation->id,
