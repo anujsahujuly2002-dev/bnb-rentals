@@ -14,6 +14,7 @@ use App\Models\PropertyEnquiry;
 use App\Models\PropertyListing;
 use App\Mail\PropertyEnquiryMail;
 use App\Http\Controllers\Controller;
+use App\Http\Helper\Helper;
 use Illuminate\Support\Facades\Mail;
 use App\Models\PropertyReviewsRating;
 use App\Notifications\EnquiryNotification;
@@ -41,6 +42,10 @@ class PropertyListingController extends Controller
         $user=User::findOrFail($property->user_id);
         $enquiriesDetailsStore = PropertyEnquiry::create($enquiriesDetails);
         $user->notify(new EnquiryNotification($user,$property,$request,$travellerName));
+        $travellerEnquiryMessage = "Hello ".auth()->user()->name." ! \r\r Thank you for your interest in our property. We have received your inquiry regarding Property Name:-".$property->property_name."\r\r The owner will review your inquiry and get back to you shortly with more details. \r\r MY BNB Rentals";
+        $ownerEnquiryMessage = "A potential traveler has inquired about your property:- ".$property->id."\r\r Need more details log in to your dashboard.\r\r Thank you for choosing MY BNB RENTALS !";
+        Helper::sendSms('+'.auth()->user()->phone,$travellerEnquiryMessage);
+        Helper::sendSms('+'.$property->user->phone,$ownerEnquiryMessage);
         if($enquiriesDetailsStore):
             Chat::create([
                 'sender_id'=>auth()->user()->id,

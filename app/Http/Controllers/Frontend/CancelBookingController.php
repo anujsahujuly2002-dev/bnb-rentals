@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\BookingInformation;
 use App\Models\CancellentionReason;
 use App\Http\Controllers\Controller;
+use App\Http\Helper\Helper;
 use App\Models\CancellationSlabFees;
 use App\Http\Requests\CancellentionRequest;
 use App\Models\CancelBooking;
@@ -116,6 +117,10 @@ class CancelBookingController extends Controller
             'note'=>$request->input('reason')
         ]);
         if($cancelBooking):
+            $travellerCancelMessage = "We received your request to cancel the booking for Property ID ".$booking->property_id." scheduled on ".date('M dS Y',strtotime($booking->check_in)).".\r\rNeed more details log in to your dashboard.\r\rMY BNB RENTALS";
+            $ownerCancelMessage = "A customer has canceled their booking Property ID:- ".$booking->property_id."\r\rNeed more details log in to your dashboard.\r\rMY BNB RENTALS";
+            Helper::sendSms("+".auth()->user()->phone,$travellerCancelMessage);
+            Helper::sendSms("+".$booking->property->user->phone,$ownerCancelMessage);
             BookingInformation::where('id',$booking->id)->update([
                 'status'=>'cancelled',
             ]);
