@@ -11,6 +11,8 @@ use App\Models\PropertyGallery;
 use App\Models\PropertyListing;
 use App\Models\PropertiesAminites;
 use App\Http\Controllers\Controller;
+use App\Models\PartnerListing;
+use App\Models\PartnerListingGalleryImage;
 use App\Models\PropertyReviewsRating;
 use App\Models\WishList;
 
@@ -312,5 +314,39 @@ class FrontendController extends Controller
         else:
             return false;
         endif;
+    }
+
+    public function partnerListing() {
+        $partnerListings = PartnerListing::get();
+        $partnerList = [];
+        foreach($partnerListings as $partnerListing):
+            $partnerList[]=[
+                'id'=>$partnerListing->id,
+                'title'=>$partnerListing->title,
+                'address'=>$partnerListing->address,
+                'description'=>$partnerListing->description,
+                'email'=>$partnerListing->email,
+                'phone_no'=>$partnerListing->phone,
+                'images' =>$this->getPartnerListingImage($partnerListing->id)
+
+            ];
+        endforeach;
+        return response()->json([
+            'status'=>true,
+            'msg'=>"Partner listing fetched successfully",
+            'data'=>$partnerList,
+        ]);
+    }
+
+    private function getPartnerListingImage($partnerListingId) {
+        $partnerListingImage = PartnerListingGalleryImage::where('partner_listing_id',$partnerListingId)->get();
+        $images = [];
+        foreach($partnerListingImage as $partnerImage):
+            $images[]= [
+                'image'=>url("public/storage/partner_listing/gallery_image/".$partnerImage->image)
+            ];      
+        endforeach;
+        return $images;
+
     }
 }

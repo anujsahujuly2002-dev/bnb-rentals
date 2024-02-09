@@ -20,6 +20,7 @@ Route::controller(FrontendController::class)->group(function() {
     Route::get('/property-listing','propertyListing');
     Route::get('/property-details/{id}','propertyDetails');
     Route::post('/booking-get-quote','bookingGetQoute');
+    Route::get('/partner-listing','partnerListing');
 });
 
 Route::controller(CommonController::class)->group(function(){
