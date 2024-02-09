@@ -1,5 +1,6 @@
 <?php
 
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -83,5 +84,11 @@ Route::middleware('auth:api')->group(function() {
         Route::get('/cancellention-reason-list','cancellentionReasonList');
         Route::post('/cancel-booking','cancelBooking');
         Route::get('/cancel-booking-list','cancelBookingList');
+    });
+
+    Route::controller(FeatureListingController::class)->group(function() {
+        Route::post('/create-feature-listing','createFeatureListing');
+        Route::post('/make-payment-feature-listing-property','makePaymentFeatureListingProperty');
+        Route::get('/feature-listing-property','featureListingPorperty');
     });
 });
