@@ -160,6 +160,22 @@
             </div>
         </div>
     </section>    
+    <div id="myModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">COMING SOON!!!</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <img src="{{asset('frontend-assets/img/comingsoon.jpg')}}" alt="" class="img-fluid">
+                    <p>"Our website & App are currently undergoing testing as we fine-tune every aspect to ensure your vacation rental experience is nothing short of extraordinary.</p>
+                    <p>Stay tuned for the big reveal, where you'll discover a treasure trove of stunning properties, unforgettable destinations, and seamless booking experiences. Your dream vacation is just a click away!"</p>
+                    <p>We apologize for any inconvinience. Please check out Instagram page <a href="http://instagram.com/mybnb_rentals" target="_blank">@myBNB_rentals</a></p>
+                </div>
+            </div>
+        </div>
+    </div> 
 </main>
 @endsection
 
@@ -168,6 +184,7 @@
     <script>
         autocomplete(document.getElementById('input'));
         $(document).ready(function() {
+            $("#myModal").modal('show');
             $("#start-date").datepicker({
                 changeMonth: true,
                 changeYear: true,
@@ -191,5 +208,6 @@
                 }
             });
         });
+
     </script>
 @endpush

@@ -1,6 +1,5 @@
 <?php
 
-
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -90,5 +89,9 @@ Route::middleware('auth:api')->group(function() {
         Route::post('/create-feature-listing','createFeatureListing');
         Route::post('/make-payment-feature-listing-property','makePaymentFeatureListingProperty');
         Route::get('/feature-listing-property','featureListingPorperty');
+    });
+
+    Route::controller(PartnerListingController::class)->group(function () {
+        Route::get('/create-partner-listing','createPartnerListing');
     });
 });
