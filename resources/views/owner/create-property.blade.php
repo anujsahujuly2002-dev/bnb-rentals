@@ -414,6 +414,42 @@
                 console.log(err.message);
             }
         }
-        
+        exportIcalLink = async (id) =>{
+            showLoader();
+            if (id != undefined) {
+                const response = await fetch(site_url + "/property/ical-link/" + id);
+                const result = await response.json();
+                if (result.status == 200) {
+                    hideLoader();
+                    toastr.success(result.msg);
+                    $(".copy_text").removeAttr("style");
+                    $(".copy_text").attr("href", result.url);
+                } else {
+                    hideLoader();
+                    toastr.error("Internal Server Error");
+                }
+            } else {
+                hideLoader();
+                toastr.error("Not Able to Export Link");
+            }
+        }
+        $(".copy_text").click(function (e) {
+            e.preventDefault();
+            var copyText = $(this).attr("href");
+
+            document.addEventListener(
+                "copy",
+                function (e) {
+                    e.clipboardData.setData("text/plain", copyText);
+                    e.preventDefault();
+                },
+                true
+            );
+
+            document.execCommand("copy");
+            // console.log("copied text : ", copyText);
+            toastr.success("Ical Link Copied");
+        });
     </script>
+    
 @endpush

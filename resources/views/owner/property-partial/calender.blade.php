@@ -24,9 +24,13 @@
                                         <button type="button" class="btn btn-primary sync_now" style="margin: 30px;">Sync Now</button>
                                     </div>
                                 </div>
+                                <div class="col-md-12">
+                                    <a href="javascript:void(0)" class="btn btn-primary" onclick="exportIcalLink({{decrypt(request()->id)??''}})">Export Calender (iCal File)</a>
+                                    <a class="copy_text btn btn-primary"  data-toggle="tooltip" title="Copy to Clipboard" href="" style="display:none">Copy ical Link</a>
+                                </div>
                             </div>
 
-                            <div style="height: 100vh">
+                            <div style="height: 100vh;width:100%">
                                 <div id='calendar1'></div>
                             </div>
                         </div>

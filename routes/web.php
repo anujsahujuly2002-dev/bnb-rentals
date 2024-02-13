@@ -24,6 +24,7 @@ Route::namespace('Frontend')->group(function() {
         Route::post('/sugesstion-destination','destintaionSuggestion')->name('destination.suggestion');
         Route::get('/partner-listing','partnerListing')->name('partner.listing');
         Route::post('/calender','calender');
+        Route::get('/property/ical-link/{id}','genratePropertIcalLink');
     });
     Route::controller('PropertyListingController')->group(function () {
         Route::get('/property-details/p{id}','propertyListingDetails')->name("property.listing.details");

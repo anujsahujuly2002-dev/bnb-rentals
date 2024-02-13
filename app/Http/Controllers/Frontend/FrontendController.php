@@ -9,13 +9,15 @@ use App\Models\Cities;
 use App\Models\Region;
 use App\Models\Country;
 use App\Models\PropertyType;
+use App\Models\SubAminities;
 use Illuminate\Http\Request;
 use App\Models\PartnerListing;
 use App\Models\PropertyBooking;
 use App\Models\PropertyListing;
-use App\Http\Controllers\Controller;
 use App\Models\BusinessCategory;
-use App\Models\SubAminities;
+use App\Models\PropertyExportIcal;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class FrontendController extends Controller
 {
@@ -233,5 +235,28 @@ class FrontendController extends Controller
         return response()->json([
             'data'=>$view
         ]);
+    }
+
+    public function genratePropertIcalLink($property_id){
+        $propertyBookings = PropertyBooking::where(['property_id' => $property_id, "type" => "1"])->get();
+        define('ICAL_FORMAT', 'Ymd\THis\Z');
+        $icalObject = "BEGIN:VCALENDAR".PHP_EOL."VERSION:2.0".PHP_EOL."CALSCALE:GREGORIAN".PHP_EOL."PRODID:-//HomeAway.com, Inc.//EN".PHP_EOL;
+        foreach ($propertyBookings as $event) {
+            $icalObject .=
+            "BEGIN:VEVENT".PHP_EOL."DTSTART:".date(ICAL_FORMAT, strtotime($event->start_date)) .PHP_EOL."DTEND:".date(ICAL_FORMAT, strtotime($event->end_date)).PHP_EOL."DTSTAMP:".date(ICAL_FORMAT, strtotime($event->created_at)).PHP_EOL."SUMMARY:".$event->events.PHP_EOL."UID:".uniqid().PHP_EOL ."LAST-MODIFIED:".PHP_EOL .date(ICAL_FORMAT, strtotime($event->updated_at)).PHP_EOL."END:VEVENT\n";
+        }
+        // close calendar
+        $icalObject .= "END:VCALENDAR";
+        $filename = $property_id . time() . '.ics';
+        Storage::put('public/ical_link/' . $filename, $icalObject);
+        PropertyExportIcal::create([
+            'property_id' => $property_id,
+            'ical_file_name' => $filename
+        ]);
+        return response()->json([
+            'status' => 200,
+            'msg' => "Ical Genrate Successfully",
+            'url' => url('public/storage/ical_link/' . $filename)
+        ], 200);
     }
 }
