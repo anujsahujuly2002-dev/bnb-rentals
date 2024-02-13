@@ -49,11 +49,7 @@ class ProfileController extends Controller
     }
 
     public function updateProfile(Request $request){
-        // $this->validate($request, [
-        //     'newPassword' => 'required',
-        //     'confirmNewPassword' => 'required_with:newPassword|same:newPassword|min:8|different:password',
-        // ]);
-        // dd($request->all());
+    //    dd($request->all());
         if(($request->has('oldPassword')) && $request->input('oldPassword') !=null):
             if (!Hash::check($request->input('oldPassword'), auth()->user()->password)) { 
                 $request->session()->flash('error', 'Your Old Password does not match');
@@ -66,14 +62,13 @@ class ProfileController extends Controller
            $request->file('file')->move($path,$profileImage);
 
         endif;
-        // dd($request->all());
         $user = User::find(Auth()->user()->id)->update([
             'name'=>$request->input('firsName'),
             'email'=>$request->input('lastname'),
             'phone'=>$request->input('phone'),
             'image'=> $profileImage??auth()->user()->image,
-            'password'=>Hash::make($request->input('newPassword'))??auth()->user()->password,
-            'show_password'=>$request->input('newPassword'),
+            'password'=>$request->input('newPassword')!=null?Hash::make($request->input('newPassword')):auth()->user()->password,
+            'show_password'=>$request->input('newPassword')!=null?$request->input('newPassword'):auth()->user()->show_password,
         ]);
         if($user):
             return redirect()->back()->with('success','Your Profile Updated Successfully');
