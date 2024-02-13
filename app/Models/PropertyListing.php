@@ -107,4 +107,7 @@ class PropertyListing extends Model
     public function country() {
         return $this->belongsTo(Country::class,'country_id','id');
     }
+    public function property_amenites() {
+        return $this->hasMany(PropertiesAminites::class,'property_id','id');
+    }
 }

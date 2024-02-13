@@ -1,6 +1,8 @@
 function autocomplete (input) {
+    const controller = new AbortController();
     //Add an event listener to compare the input value with all countries
     input.addEventListener('input',async function () {
+        // controller.abort();
         //Close the existing list if it is open
         closeList();
         //If the input is empty, exit the function
@@ -15,8 +17,9 @@ function autocomplete (input) {
 
         $(".searchbar").addClass('home-page-searchbar');
         const response =  await fetch(site_url+"/sugesstion-destination",{
-        method: "POST",
-        headers: {
+            signal: controller.signal,
+            method: "POST",
+            headers: {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
                 "content"
             ),

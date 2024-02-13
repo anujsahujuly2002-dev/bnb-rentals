@@ -68,7 +68,7 @@
                 <h2>United States Vacation Rentals</h2>
                 <ul class="countriesList">
                     @foreach($states as $state)
-                        <li><a href="{{ route('frontend.property.listing',['state_id'=>$state->id,'type'=>"state"]) }}">{{ $state->name }}</a></li>
+                        <li><a href="{{ route('frontend.property.listing',['state_id'=>$state->id]) }}">{{ $state->name }}</a></li>
                     @endforeach
                 </ul>
             </div>
