@@ -48,6 +48,7 @@ Route::middleware('auth:api')->group(function() {
     Route::controller(Dashboard::class)->group(function() {
         Route::get('/logout','logout');
         Route::post('/change-user-type','changeUserType');
+        Route::post('/change-password','changePassword');
     });
     Route::controller(PropertyController::class)->prefix('property')->group(function(){
         Route::post('/property-information','propertyInformation');

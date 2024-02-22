@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Models\PropertyType;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\Api\ChangePasswordRequest;
 
 class Dashboard extends Controller
 {
@@ -28,6 +31,34 @@ class Dashboard extends Controller
             'status'=>true,
             'msg'=>'Role Changed Sucessfully'
         ]); 
+    }
+
+    public function changePassword(ChangePasswordRequest $request) {
+        if(($request->has('old_password')) && $request->input('old_password') !=null):
+            if (!Hash::check($request->input('old_password'), auth()->user()->password)) { 
+                return response()->json([
+                    'status'=>false,
+                    'msg'=>"You're old password does'nt match"
+                ]); 
+             }
+        endif;
+
+        $changePassword = User::find(auth()->user()->id)->update([
+            'password'=>Hash::make($request->input('confirm_password')),
+            'show_password'=>$request->input('confirm_password')
+        ]);
+        if(!$changePassword):
+            return response()->json([
+                'status'=>false,
+                'msg'=>"You're password not change,Please try again"
+            ]); 
+        else:
+            return response()->json([
+                'status'=>true,
+                'msg'=>"You're password change successfully"
+            ]); 
+        endif;
+        
     }
 
 

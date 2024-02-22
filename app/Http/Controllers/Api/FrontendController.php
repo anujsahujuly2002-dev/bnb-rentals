@@ -29,6 +29,9 @@ class FrontendController extends Controller
         if($request->input('property_types') !=null):
             $properties = $properties->where('property_type_id',$request->input('property_types'));
         endif;
+        if($request->input('feature_listing') =='yes'):
+            $properties = $properties->where('feature','1');
+        endif;
         $properties = $properties->paginate($perPage, ['*'], 'page', $pageNo);
         // dd($properties);
         $paginationMeta = [
@@ -343,7 +346,7 @@ class FrontendController extends Controller
         $images = [];
         foreach($partnerListingImage as $partnerImage):
             $images[]= [
-                'image'=>url("public/storage/partner_listing/gallery_image/".$partnerImage->image)
+                'image'=>url("public/storage/upload/partner_listing/gallery_image/".$partnerImage->image)
             ];      
         endforeach;
         return $images;
