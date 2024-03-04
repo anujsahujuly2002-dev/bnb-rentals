@@ -90,7 +90,6 @@ class ProfileController extends Controller
 
     public function getOwnerProfileDetails() {
         $user = User::findOrFail(auth()->user()->id);
-        // dd($user);
         return response()->json([
             'status'=>true,
             'msg'=>"Owner Profile Details Fetch successfully",

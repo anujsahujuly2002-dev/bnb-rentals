@@ -181,7 +181,7 @@ class BookingInformationController extends Controller
                 $tresponse = $response->getTransactionResponse();
                 if($tresponse != null && $tresponse->getMessages() != null):
                     $message_text = $tresponse->getMessages()[0]->getDescription()." Transaction ID: " .$tresponse->getTransId() ;
-                    $msg_type = "success_msg";  
+                    $msg_type = "success_msg";
                     BookingPaymentTransactionHistory::create([
                         'booking_information_id'=>$bookingInformation->id??$checkBooking->id,
                         'pay_amount'=>$payableAmount,
@@ -205,22 +205,22 @@ class BookingInformationController extends Controller
                     ]);
                 else:
                     $message_text = 'There were some issue with the payment. Please try again later.';
-                    $msg_type = "error_msg";                                    
+                    $msg_type = "error_msg";
 
                     if ($tresponse->getErrors() != null) {
                         $message_text = $tresponse->getErrors()[0]->getErrorText();
-                        $msg_type = "error_msg";                                    
+                        $msg_type = "error_msg";
                     }
                 endif;
             else:
-                
+
                  // Or, print errors if the API request wasn't successful
                 $message_text = 'There were some issue with the payment. Please try again later.';
-                $msg_type = "error_msg"; 
+                $msg_type = "error_msg";
                 $tresponse = $response->getTransactionResponse();
                 if($tresponse != null && $tresponse->getErrors() != null):
                     $message_text = $tresponse->getErrors()[0]->getErrorText();
-                    $msg_type = "error_msg";  
+                    $msg_type = "error_msg";
                 else:
                     $message_text = $response->getMessages()->getMessage()[0]->getText();
                     $msg_type = "error_msg";
@@ -303,7 +303,7 @@ class BookingInformationController extends Controller
             'status'=>true,
             'msg'=>"Booking details fetched successfully",
             'data'=>$bookingDetails,
-           
+
         ]);
     }
 
@@ -338,7 +338,7 @@ class BookingInformationController extends Controller
                 $tresponse = $response->getTransactionResponse();
                 if ($tresponse != null && $tresponse->getMessages() != null) {
                     $message_text = $tresponse->getMessages()[0]->getDescription().", Transaction ID: " .$tresponse->getTransId() ;
-                    $msg_type = "success_msg";    
+                    $msg_type = "success_msg";
                     $redirectUrl = route('traveller.booking');
                     BookingPaymentTransactionHistory::create([
                         'booking_information_id'=>$bookingInformation->id,
@@ -359,17 +359,17 @@ class BookingInformationController extends Controller
                         'status'=>'failed'
                     ]);
                     $message_text = 'There were some issue with the payment. Please try again later.';
-                    $msg_type = "error_msg";                                    
+                    $msg_type = "error_msg";
 
                     if ($tresponse->getErrors() != null) {
                         $message_text = $tresponse->getErrors()[0]->getErrorText();
-                        $msg_type = "error_msg";                                    
+                        $msg_type = "error_msg";
                     }
                 }
                 // Or, print errors if the API request wasn't successful
             else:
                 $message_text = 'There were some issue with the payment. Please try again later.';
-                $msg_type = "error_msg";                                    
+                $msg_type = "error_msg";
                 $tresponse = $response->getTransactionResponse();
                 BookingPaymentTransactionHistory::create([
                     'booking_information_id'=>$bookingInformation->id,
@@ -380,11 +380,11 @@ class BookingInformationController extends Controller
                 ]);
                 if ($tresponse != null && $tresponse->getErrors() != null) {
                     $message_text = $tresponse->getErrors()[0]->getErrorText();
-                    $msg_type = "error_msg";                    
+                    $msg_type = "error_msg";
                 } else {
                     $message_text = $response->getMessages()->getMessage()[0]->getText();
                     $msg_type = "error_msg";
-                }  
+                }
             endif;
         else:
             $message_text = "No response returned";

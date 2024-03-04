@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Carbon\Carbon;
 use App\Models\User;
+use App\Http\Helper\Helper;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -16,7 +17,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\Api\AuthRequest;
 use App\Http\Requests\Api\LoginRequest;
 use Illuminate\Support\Facades\Validator;
-use App\Notifications\OwnerRegistarationNotification;
+use App\Notifications\RegistrationNotification;
 
 class AuthController extends Controller
 {
@@ -29,9 +30,9 @@ class AuthController extends Controller
             'show_password'=>$request->input('password'),
         ];
         $user = User::create( $userDetails);
-        $user->notify(New OwnerRegistarationNotification($userDetails));
-        Mail::to('leo@mybnbrentals.com')->send(new OwnerRegistrationEmail($userDetails));
-        Mail::to('anujkumaruvm@hotmail.com')->send(new OwnerRegistrationMail($userDetails));
+        $user->notify(New RegistrationNotification($userDetails));
+        $message = "Welcome to MY BNB RENTALS ! \r\r Congratulations! Your account is all set up and ready to go. We're thrilled to have you on board.\r\r Thank you for choosing My BNB RENTALS! We look forward to providing you with a great experience.";
+        Helper::sendSms("+".$request->input('country_code').$request->input('phone'),$message);
         $role = Role::findOrFail($request->input('role_id'))->name;
         $user->assignRole($role);
         if($user):
@@ -50,6 +51,8 @@ class AuthController extends Controller
     public function login(LoginRequest $request) {
         if(Auth::attempt(['email' => $request->input('email'), 'password' =>$request->input('password')])):
             if(Auth::user()->status=='0'):
+                $token = auth()->user()->token();
+                $token->revoke();
                 return response()->json([
                     'status'=>false,
                     'msg'=>'Your Account Has been Blocked, Please Contact a administrator',

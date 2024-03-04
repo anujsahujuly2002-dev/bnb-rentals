@@ -3,18 +3,23 @@
 namespace App\Http\Controllers\Api;
 
 use Carbon\Carbon;
+use App\Models\City;
+use App\Models\State;
+use App\Models\Cities;
+use App\Models\Region;
+use App\Models\Country;
+use App\Models\WishList;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use App\Models\PropertyRates;
+use App\Models\PartnerListing;
 use App\Models\PropertyBooking;
 use App\Models\PropertyGallery;
 use App\Models\PropertyListing;
 use App\Models\PropertiesAminites;
 use App\Http\Controllers\Controller;
-use App\Models\PartnerListing;
-use App\Models\PartnerListingGalleryImage;
 use App\Models\PropertyReviewsRating;
-use App\Models\WishList;
+use App\Models\PartnerListingGalleryImage;
 
 class FrontendController extends Controller
 {
@@ -28,6 +33,29 @@ class FrontendController extends Controller
         $properties = PropertyListing::where('approval','1');
         if($request->input('property_types') !=null):
             $properties = $properties->where('property_type_id',$request->input('property_types'));
+        endif;
+        if($request->input('destination_or_listing_id') !=null):
+            $destination = explode(',', $request->input('destination_or_listing_id'));
+            if (count($destination) == 5) :
+                $state = State::where('name',$destination['3'])->first()->id;
+                $subCity = Cities::where('name',$destination['0'])->first()->id;
+                $properties = $properties->where('sub_city_id','=', $subCity);
+            elseif (count($destination) == 4) :
+                $state = State::where('name',$destination['2'])->first()->id;
+                $regions = Region::where('state_id',$state)->get();
+                $city = city::where('name',$destination['0'])->first()->id;
+                $properties = $properties->where('city_id','=', $city);
+            elseif (count($destination) == 3) :
+                $state = State::where('name', $destination['1'])->first()->id;
+                $region_name = Region::where(['name'=> $destination['0'],'state_id'=>$state])->first();
+                $properties = $properties->where('region_id', $region_name->id);
+            elseif (count($destination) == 2) :
+                $state_name = State::where('name', $destination['0'])->first();
+                $properties = $properties->where('state_id', $state_name->id);
+            elseif (count($destination) == 1) :
+                $country = Country::where('name', $destination['0'])->first();
+                $properties = $properties->where('country_id', $country->id);
+            endif;
         endif;
         if($request->input('feature_listing') =='yes'):
             $properties = $properties->where('feature','1');
@@ -109,7 +137,7 @@ class FrontendController extends Controller
             'iframe_link_google'=>$propertyDeatails->iframe_link_google,
             'latitude'=>$propertyDeatails->latitude,
             'longitude'=>$propertyDeatails->longitude,
-        ];  
+        ];
         return response()->json([
             'status'=>true,
             'msg'=>"Property Details Fetched Successfully",
@@ -124,7 +152,7 @@ class FrontendController extends Controller
                 'wishList'=>$this->checkWishList($request->input('user_id'),$id)
             ],
         ]);
-       
+
     }
 
     public function galleryImage($id) {
@@ -140,8 +168,8 @@ class FrontendController extends Controller
 
     public function rentalRates($id) {
         return PropertyRates::where('property_id',$id)->get()->toArray();
-    } 
-    
+    }
+
     public function amenities($id) {
         $amenityArr = [];
         $amenities = PropertiesAminites::where('property_id',$id)->groupBy('aminities_id')->get();
@@ -347,7 +375,7 @@ class FrontendController extends Controller
         foreach($partnerListingImage as $partnerImage):
             $images[]= [
                 'image'=>url("public/storage/upload/partner_listing/gallery_image/".$partnerImage->image)
-            ];      
+            ];
         endforeach;
         return $images;
 
