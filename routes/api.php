@@ -63,6 +63,7 @@ Route::middleware('auth:api')->group(function() {
         Route::post('/add-wishlist','addWishList');
         Route::post('/remove-wishlist','removeWishList');
         Route::get('/wishlist','wishList');
+        Route::get('/get-property-information/{id}','getPropertyInformation');
     });
 
     Route::controller(ProfileController::class)->group(function() {
@@ -79,7 +80,7 @@ Route::middleware('auth:api')->group(function() {
         Route::post('/pay-remening-balance','payRemeningBalance');
         Route::get('/transaction-history','transactionHistory');
     });
-    
+
     Route::controller(CancelBookingController::class)->group(function() {
         Route::get('/cancellention-reason-list','cancellentionReasonList');
         Route::post('/cancel-booking','cancelBooking');

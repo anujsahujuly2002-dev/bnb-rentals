@@ -388,6 +388,36 @@ class PropertyController extends Controller
         ]);
     }
 
+    public function getPropertyInformation($id) {
+        $keysArray =[
+            'property_name',
+            'property_main_photos',
+            'square_feet',
+            'property_type_id',
+            'bedrooms',
+            'sleeps',
+            'avg_night_rates',
+            'avg_rate_unit',
+            'baths',
+            'description',
+            'country_id',
+            'state_id',
+            'region_id',
+            'city_id',
+            'sub_city_id',
+            'address',
+            'town',
+            'zip_code',
+            'youtube_video_link',
+        ];
+        $propertyInformation = PropertyListing::where(['id'=>$id,'user_id'=>auth()->user()->id])->first($keysArray)->toArray();
+        return response()->json([
+            'status'=>true,
+            'msg'=>"Property information fetched successfully",
+            'data'=>$propertyInformation
+        ]);
+    }
+
 
 
 }
