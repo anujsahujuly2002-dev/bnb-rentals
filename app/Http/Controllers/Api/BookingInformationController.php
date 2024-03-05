@@ -245,7 +245,7 @@ class BookingInformationController extends Controller
         endif;
     }
 
-    public function myBookingList() {
+    public function myBookingList(Request $request) {
         $bookingList=[];
         $paymentTransaction = BookingInformation::when(auth()->user()->roles()->first()->name=='Traveller',function($traveller){
             $traveller->where('user_id',auth()->user()->id);
@@ -253,7 +253,22 @@ class BookingInformationController extends Controller
             $owner->whereHas('property',function($property){
                 $property->where('user_id',auth()->user()->id);
             });
+        })->when($request->input('booking_type') !=null,function($bookingInformation) use ($request) {
+            $currentDate = Carbon::now()->format('Y-m-d');
+            if($request->input('booking_type')=='upcoming_booking'):
+                $bookingInformation->where('check_in','>=',$currentDate);
+            endif;
+            if($request->input('booking_type')=='current_booking'):
+                $bookingInformation->where('check_in','<=',$currentDate)->where('check_out','>=',$currentDate);
+            endif;
+            if($request->input('booking_type')=='checking_out'):
+                $bookingInformation->where('check_out','=',Carbon::now()->addDays(1)->format('Y-m-d'))->where('check_out','=',$currentDate);
+            endif;
+            if($request->input('booking_type')=='arriving_soon'):
+                $bookingInformation->where('check_in','=',Carbon::now()->addDays(1)->format('Y-m-d'))->where('check_in','=',$currentDate);
+            endif;
         })->where('status','confirmed')->get();
+        // dd($paymentTransaction);
         foreach($paymentTransaction as $booking):
             $bookingList[] = [
                 'id'=>$booking->id,
