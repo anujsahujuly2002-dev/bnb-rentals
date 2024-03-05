@@ -470,4 +470,24 @@ class PropertyController extends Controller
             ],200);
         endif;
     }
+
+
+    public function propertyList() {
+        $properties = PropertyListing::where('user_id',auth()->user()->id)->get();
+        $property = [];
+        foreach($properties as $pro):
+            $property [] =[
+                'id'=>$pro->id,
+                'name'=>$pro->property_name,
+                'property_created_on'=>date('M dS,Y',strtotime($pro->created_at)),
+                'image'=>url('public/storage/upload/property_image/main_image/'.$pro->property_main_photos),
+                'status'=>$pro->approval ==0?"Pending Approval":"Active",
+            ];
+        endforeach;
+        return response()->json([
+            'status'=>true,
+            'msg'=>"Property listing fetched successfully",
+            'data'=>$property
+        ]);
+    }
 }

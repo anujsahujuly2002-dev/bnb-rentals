@@ -65,6 +65,7 @@ Route::middleware('auth:api')->group(function() {
         Route::get('/wishlist','wishList');
         Route::get('/get-property-information/{id}','getPropertyInformation');
         Route::post('/update-property-information','updatePropertyInformation');
+        Route::get('/property-list','propertyList');
     });
 
     Route::controller(ProfileController::class)->group(function() {
