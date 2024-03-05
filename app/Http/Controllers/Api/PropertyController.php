@@ -390,6 +390,7 @@ class PropertyController extends Controller
 
     public function getPropertyInformation($id) {
         $keysArray =[
+            'id',
             'property_name',
             'property_main_photos',
             'square_feet',
@@ -410,7 +411,7 @@ class PropertyController extends Controller
             'zip_code',
             'youtube_video_link',
         ];
-        $propertyInformation = PropertyListing::where(['id'=>$id,'user_id'=>auth()->user()->id])->first($keysArray)->toArray();
+        $propertyInformation = PropertyListing::where(['id'=>$id,'user_id'=>auth()->user()->id])->first($keysArray)?->toArray();
         return response()->json([
             'status'=>true,
             'msg'=>"Property information fetched successfully",
@@ -418,6 +419,55 @@ class PropertyController extends Controller
         ]);
     }
 
-
-
+    public function updatePropertyInformation(InfromationRequest $request) {
+        $originalImageName = $request->input('old_image');
+        if($request->hasfile('property_main_image')):
+            $path = storage_path('public/upload/property_image/main_image/');
+            if(file_exists($path.$request->input('old_image'))):
+                unlink($path.$request->input('old_image'));
+            endif;
+            $image = $request->file('property_main_image');
+            $ext = "webp";
+            $convertImage = Image::make($image->getRealPath())->resize(650, 960, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            })->encode($ext,100);
+            $originalImageName = uniqid().'.'.$ext;
+            Storage::put('public/upload/property_image/main_image/'.$originalImageName, $convertImage);
+        endif;
+        $property = PropertyListing::where('id',$request->input('id'))->update([
+            'user_id' =>auth()->user()->id,
+            'property_name' =>$request->input('property_name'),
+            'property_main_photos'=>  $originalImageName,
+            'square_feet'=>$request->input('square_feet'),
+            'property_type_id'=>$request->input('property_type'),
+            'bedrooms'=>$request->input('bedrooms'),
+            'sleeps'=>$request->input('sleeps'),
+            'avg_night_rates'=>$request->input('avg_night'),
+            'avg_rate_unit'=>$request->input('avg_night_unit'),
+            'baths'=>$request->input('baths'),
+            'description'=>$request->input('description'),
+            'country_id'=>$request->input('country'),
+            'state_id'=>$request->input('state'),
+            'region_id'=>$request->input('region'),
+            'city_id'=>$request->input('city'),
+            'sub_city_id' => $request->input('sub_city') !=null?$request->input('sub_city'):NULL,
+            'address' => $request->input('address'),
+            'town' => $request->input('town'),
+            'zip_code' => $request->input('zipcode'),
+            'youtube_video_link'=>$request->input('youtube_video_link')
+        ]);
+        if($property):
+            return response()->json([
+                'status'=>true,
+                'msg'=>'Property Information Update Successfully',
+                'property_id'=>$request->input('id')
+            ],200);
+        else:
+            return response()->json([
+                'status'=>false,
+                'msg'=>'Property Information Not Store, Please try again',
+            ],200);
+        endif;
+    }
 }

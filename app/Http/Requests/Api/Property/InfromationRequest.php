@@ -26,7 +26,7 @@ class InfromationRequest extends FormRequest
     {
         return [
             'property_name'=>'required',
-            'property_main_image'=>'required|mimes:png,jpg,jpeg,webp|image|max:2048',
+            'property_main_image'=>'requiredif:old_image,!=,null|mimes:png,jpg,jpeg,webp|image|max:2048',
             'square_feet' => 'required',
             'property_type' => 'required|numeric|exists:property_types,id',
             'bedrooms' => 'required|numeric',
