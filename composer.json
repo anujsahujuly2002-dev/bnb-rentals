@@ -9,7 +9,6 @@
         "academe/omnipay-authorizenetapi": " ~3.0",
         "authorizenet/authorizenet": "^2.0",
         "guzzlehttp/guzzle": "^7.2",
-        "iatstuti/laravel-cascade-soft-deletes": "4.3.*",
         "intervention/image": "^2.7",
         "laravel/framework": "^10.10",
         "laravel/passport": "^11.9",
