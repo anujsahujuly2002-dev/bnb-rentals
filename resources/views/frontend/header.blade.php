@@ -21,7 +21,7 @@
         <link rel="stylesheet" href="{{ asset('frontend-assets/vendors/mapbox-gl/mapbox-gl.min.css') }}">
         <link rel="stylesheet" href="{{ asset('frontend-assets/vendors/dataTables/jquery.dataTables.min.css') }}">
         <link rel="stylesheet" href="{{ asset('frontend-assets/css/themes.css') }}">
-        <link rel="icon" href="{{ asset('frontend-assets/img/favicon.png') }}"> 
+        <link rel="icon" href="{{ asset('frontend-assets/img/favicon.png') }}">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
         <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 

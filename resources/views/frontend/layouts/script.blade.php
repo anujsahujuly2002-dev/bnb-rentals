@@ -27,10 +27,18 @@
         function hideLoader(){
             $(".loading").addClass('d-none');
         }
+
+        showPassword =()=>{
+            var x = document.getElementById("password");
+            if(x.type === "password"){
+                x.type = "text";
+            }else{
+                x.type = "password";
+            }
+        }
     </script>
      <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.2/js/toastr.min.js"></script>
     @stack('js')
-   
+
 </body>
 </html>
-    

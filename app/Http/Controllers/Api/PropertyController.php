@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use Exception;
 use Carbon\Carbon;
+use App\Models\WishList;
 use App\Models\ImportIcal;
+use App\Models\MainAminity;
 use App\Models\SubAminities;
 use Illuminate\Http\Request;
 use App\Models\PropertyRates;
@@ -13,6 +15,7 @@ use App\Models\PropertyGallery;
 use App\Models\PropertyListing;
 use App\Models\PropertiesAminites;
 use App\Http\Controllers\Controller;
+use App\Models\PropertyReviewsRating;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\Api\RentalRatesRequest;
@@ -20,8 +23,6 @@ use App\Http\Requests\Api\Property\RentalPolicies;
 use App\Http\Requests\Api\Property\InfromationRequest;
 use App\Http\Requests\Api\Property\GalleryImageRequest;
 use App\Http\Requests\Api\Property\AdditionalRentalRatesRequest;
-use App\Models\PropertyReviewsRating;
-use App\Models\WishList;
 
 class PropertyController extends Controller
 {
@@ -389,35 +390,27 @@ class PropertyController extends Controller
     }
 
     public function getPropertyInformation($id) {
-        $keysArray =[
-            'id',
-            'property_name',
-            'property_main_photos',
-            'square_feet',
-            'property_type_id',
-            'bedrooms',
-            'sleeps',
-            'avg_night_rates',
-            'avg_rate_unit',
-            'baths',
-            'description',
-            'country_id',
-            'state_id',
-            'region_id',
-            'city_id',
-            'sub_city_id',
-            'address',
-            'town',
-            'zip_code',
-            'youtube_video_link',
-        ];
-        $propertyInformation = PropertyListing::where(['id'=>$id,'user_id'=>auth()->user()->id])->first($keysArray)?->toArray();
+        // $keysArray = ['id','property_name','property_main_photos','square_feet','property_type_id', 'bedrooms','sleeps','avg_night_rates','avg_rate_unit','baths','description','country_id','state_id','region_id','city_id','sub_city_id','address','town','zip_code','youtube_video_link'];
+        $user_id = auth()->user()->id;
+        $propertyInformation = PropertyListing::where('id', $id)->where('user_id', $user_id)->first();
+        if (!$propertyInformation) {
+            return response()->json([
+                'status' => false,
+                'msg' => "Property information not found",
+                'data' => null
+            ]);
+        }
+        $amenities = PropertiesAminites::where('property_id', $id)->get(['id','property_id','aminities_id','sub_aminities_id'])->toArray();
         return response()->json([
-            'status'=>true,
-            'msg'=>"Property information fetched successfully",
-            'data'=>$propertyInformation
+            'status' => true,
+            'msg' => "Property information fetched successfully",
+            'data' => [
+                'property_information' => $propertyInformation->toArray(),
+                'amenities' => $amenities,
+            ]
         ]);
     }
+
 
     public function updatePropertyInformation(InfromationRequest $request) {
         $originalImageName = $request->input('old_image');
