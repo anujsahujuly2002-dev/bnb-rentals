@@ -25,7 +25,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-12">
-                                    <a href="javascript:void(0)" class="btn btn-primary" onclick="exportIcalLink({{decrypt(request()->id)??''}})">Export Calender (iCal File)</a>
+                                    <a href="javascript:void(0)" class="btn btn-primary" onclick="exportIcalLink({{(request()->id)??''}})">Export Calender (iCal File)</a>
                                     <a class="copy_text btn btn-primary"  data-toggle="tooltip" title="Copy to Clipboard" href="" style="display:none">Copy ical Link</a>
                                 </div>
                             </div>

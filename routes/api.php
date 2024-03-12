@@ -66,6 +66,8 @@ Route::middleware('auth:api')->group(function() {
         Route::get('/get-property-information/{id}','getPropertyInformation');
         Route::post('/update-property-information','updatePropertyInformation');
         Route::get('/property-list','propertyList');
+        Route::post('/add-gallery-image','addGalleryImage');
+        Route::post('delete-gallery-image','deleteGalleryImage');
     });
 
     Route::controller(ProfileController::class)->group(function() {

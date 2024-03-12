@@ -15,6 +15,8 @@ use App\Models\PropertyGallery;
 use App\Models\PropertyListing;
 use App\Models\PropertiesAminites;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\AddGalleryImageRequest;
+use App\Http\Requests\Api\DeleteGalleryImageRequest;
 use App\Models\PropertyReviewsRating;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
@@ -125,7 +127,6 @@ class PropertyController extends Controller
 
     }
     public function rentalRatesStore(RentalRatesRequest $request) {
-        // dd($request->all());
         foreach($request->input('rental_rates') as $rentalRates):
             $propertyRates = PropertyRates::create([
                 "property_id"=>$request->input('property_id'),
@@ -200,23 +201,20 @@ class PropertyController extends Controller
     }
 
     public function galleryImages(GalleryImageRequest $request) {
-        // dd($request->image);
         if(count($request->image) >0):
             for($x = 0; $x < count($request->image); $x++):
-                // if ($request->hasFile($request->image[$x])):
-                    $image = $request->image[$x];
-                    $ext = "webp";
-                    $convertImage = Image::make($image->getRealPath())->resize(1000, 720, function ($constraint) {
-                        $constraint->aspectRatio();
-                        $constraint->upsize();
-                    })->encode($ext,100);
-                    $originalImageName = uniqid().'.'.$ext;
-                    Storage::put('public/upload/property_image/gallery_image/'.$originalImageName, $convertImage);
-                    $propertyListing = PropertyGallery::create([
-                        "property_id"=>$request->input("property_id"),
-                        "image_name"=>$originalImageName
-                    ]);
-                // endif;
+                $image = $request->image[$x];
+                $ext = "webp";
+                $convertImage = Image::make($image->getRealPath())->resize(1000, 720, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                })->encode($ext,100);
+                $originalImageName = uniqid().'.'.$ext;
+                Storage::put('public/upload/property_image/gallery_image/'.$originalImageName, $convertImage);
+                $propertyListing = PropertyGallery::create([
+                    "property_id"=>$request->input("property_id"),
+                    "image_name"=>$originalImageName
+                ]);
             endfor;
         endif;
         return response()->json([
@@ -390,7 +388,6 @@ class PropertyController extends Controller
     }
 
     public function getPropertyInformation($id) {
-        // $keysArray = ['id','property_name','property_main_photos','square_feet','property_type_id', 'bedrooms','sleeps','avg_night_rates','avg_rate_unit','baths','description','country_id','state_id','region_id','city_id','sub_city_id','address','town','zip_code','youtube_video_link'];
         $user_id = auth()->user()->id;
         $propertyInformation = PropertyListing::where('id', $id)->where('user_id', $user_id)->first();
         if (!$propertyInformation) {
@@ -400,13 +397,91 @@ class PropertyController extends Controller
                 'data' => null
             ]);
         }
-        $amenities = PropertiesAminites::where('property_id', $id)->get(['id','property_id','aminities_id','sub_aminities_id'])->toArray();
+        $information = [
+            'id'=>$propertyInformation->id,
+            'property_name'=>$propertyInformation->property_name,
+            'property_main_photos'=> $propertyInformation->property_main_photos,
+            'property_main_photos_url'=>url('public/storage/upload/property_image/main_image/'.$propertyInformation->property_main_photos),
+            'square_feet'=>$propertyInformation->square_feet,
+            'property_type_id'=>$propertyInformation->property_type_id,
+            'property_type_name'=>$propertyInformation->property_types->property_type_name,
+            'bedrooms'=>$propertyInformation->bedrooms,
+            'sleeps'=>$propertyInformation->sleeps,
+            'avg_night_rates'=>$propertyInformation->avg_night_rates,
+            'avg_rate_unit'=>$propertyInformation->avg_rate_unit,
+            'baths'=>$propertyInformation->baths,
+            'description'=>$propertyInformation->description,
+            'country_id'=>$propertyInformation->country_id,
+            'country_name'=>$propertyInformation->country->name,
+            'state_id'=>$propertyInformation->state_id,
+            'state_name'=>$propertyInformation->state->name,
+            'region_id'=>$propertyInformation->region_id,
+            'region_name'=>$propertyInformation->region->name,
+            'city_id'=>$propertyInformation->city_id,
+            'city_name'=>$propertyInformation->city->name,
+            'sub_city_id'=>$propertyInformation->sub_city_id,
+            'sub_city_name'=>$propertyInformation?->sub_city?->name,
+            'address'=>$propertyInformation->address,
+            'town'=>$propertyInformation->town,
+            'zip_code'=>$propertyInformation->zip_code,
+            'youtube_video_link'=>$propertyInformation->youtube_video_link
+        ];
+        $amenities = PropertiesAminites::where('property_id', $id)->get(['id','property_id','aminities_id','sub_aminities_id']);
+        $location_information =[
+            'iframe_link'=>$propertyInformation->iframe_link_google,
+            'latitude'=>$propertyInformation->latitude,
+            'longitude'=>$propertyInformation->longitude
+        ];
+        $rentalRates = PropertyRates::where('property_id', $id)->get(['property_id','session_name','from_date','to_date','nightly_rate','weekly_rate','weekend_rates','monthly_rate'])->toArray();
+        $additional_rental_rates = [
+            'property_id'=> $propertyInformation->id,
+            'admin_fees'=> $propertyInformation->admin_fees,
+            'cleaning_fees'=> $propertyInformation->cleaning_fees,
+            'refundable_damage_deposite'=> $propertyInformation->refundable_damage_deposite,
+            'danage_waiver'=> $propertyInformation->danage_waiver,
+            'peet_fee'=> $propertyInformation->peet_fee,
+            'pet_fees_unit'=> $propertyInformation->pet_fees_unit,
+            'extra_person_fee'=> $propertyInformation->extra_person_fee,
+            'after_guest'=> $propertyInformation->after_guest,
+            'poolheating_fee'=> $propertyInformation->poolheating_fee,
+            'pool_heating_fees_perday'=> $propertyInformation->pool_heating_fees_perday,
+            'check_in'=> $propertyInformation->check_in,
+            'check_out'=> $propertyInformation->check_out,
+            'tax_rates'=> $propertyInformation->tax_rates,
+            'change_over'=> $propertyInformation->change_over,
+            'currency_id'=> $propertyInformation->currency_id,
+            'currency_name'=> $propertyInformation->currency->currency_name,
+            'rental_notes'=>$propertyInformation->rates_notes
+        ];
+        $galleryImage = PropertyGallery::where('property_id',$id)->get();
+        $galleryImages=[];
+        foreach($galleryImage as $image):
+            $galleryImages[] = [
+                'id'=>$image->id,
+                'property_id'=>$image->property_id,
+                'image'=>url('public/storage/upload/property_image/gallery_image/'.$image->image_name)
+            ];
+        endforeach;
+        $rentalPolicies =[
+            'rental_policies'=>$propertyInformation->rental_policies,
+            'cancellention_policies_id'=>$propertyInformation->cancelletion_policies_id,
+            'cancellention_policies' =>[
+                'id'=> $propertyInformation->cancelletionPolicies->id,
+                'description'=>$propertyInformation->cancelletionPolicies->description,
+                'note'=>$propertyInformation->cancelletionPolicies->note,
+            ]
+        ];
         return response()->json([
             'status' => true,
             'msg' => "Property information fetched successfully",
             'data' => [
-                'property_information' => $propertyInformation->toArray(),
+                'property_information' => $information,
                 'amenities' => $amenities,
+                'location_information'=>$location_information,
+                'rental_rates'=>$rentalRates,
+                'additional_rental_rates'=>$additional_rental_rates,
+                'galleryImages'=>$galleryImages,
+                'rental_polices'=>$rentalPolicies
             ]
         ]);
     }
@@ -482,5 +557,47 @@ class PropertyController extends Controller
             'msg'=>"Property listing fetched successfully",
             'data'=>$property
         ]);
+    }
+
+    public function addGalleryImage(AddGalleryImageRequest $request) {
+        $image = $request->file('image');
+        $ext = "webp";
+        $convertImage = Image::make($image->getRealPath())->resize(650, 960, function ($constraint) {
+            $constraint->aspectRatio();
+            $constraint->upsize();
+        })->encode($ext,100);
+        $originalImageName = uniqid().'.'.$ext;
+        Storage::put('public/upload/property_image/gallery_image/'.$originalImageName, $convertImage);
+        $galleryImage = PropertyGallery::create([
+            'property_id'=>$request->input('property_id'),
+            'image_name'=>$originalImageName
+        ]);
+        if($galleryImage):
+            return response()->json([
+                'status'=>true,
+                'msg'=>"Property gallery image added successfully",
+            ]);
+        else:
+            return response()->json([
+                'status'=>false,
+                'msg'=>"Property gallery image not added successfully",
+            ],500);
+        endif;
+    }
+
+
+    public function deleteGalleryImage(DeleteGalleryImageRequest $request){
+        $galleryImage = PropertyGallery::where('id',$request->input('id'))->delete();
+        if($galleryImage):
+            return response()->json([
+                'status'=>true,
+                'msg'=>"Property gallery image delete successfully",
+            ]);
+        else:
+            return response()->json([
+                'status'=>false,
+                'msg'=>"Property gallery image not delete successfully",
+            ],500);
+        endif;
     }
 }
