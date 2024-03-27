@@ -21,7 +21,7 @@
                                     @if($propertyListing !='')
                                         @if ($propertyListing?->property_gallery_image?->count() >0)
                                             @foreach ($propertyListing->property_gallery_image as $galleryImages)
-                                                <div class="image_container d-flex justify-content-center position-relative" id="{{$galleryImages->id}}">
+                                                <div class="image_container" id="{{$galleryImages->id}}">
                                                     <img src="{{ url('public/storage/upload/property_image/gallery_image/'.$galleryImages->image_name) }}" alt="Image" srcset="">
                                                     <span class="position-absolute" onclick="deleteImage({{$galleryImages->property_id}},{{$galleryImages->id}})">&times;</span>
                                                 </div>

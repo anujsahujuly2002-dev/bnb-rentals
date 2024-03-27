@@ -4,47 +4,47 @@
 			<nav class="navbar navbar-expand-lg bg-transparent px-0">
 				<a class="navbar-brand" href="{{ route('frontend.index') }}"> <img src="{{ asset('frontend-assets/img/logo.png') }}" alt=""> </a>
 				<div class="d-flex d-lg-none ml-auto">
-					<button class="navbar-toggler border-0 px-0" type="button" data-toggle="collapse" data-target="#primaryMenu06" aria-controls="primaryMenu06" aria-expanded="false" aria-label="Toggle navigation">
-						<span class="text-white fs-24"><i class="fal fa-bars"></i></span>
+					<button class="navbar-toggler border-0 px-0" type="button" data-toggle="collapse" data-target="#primaryMenu06" aria-controls="primaryMenu06" aria-expanded="false" aria-label="Toggle navigation"> 
+						<span class="text-white fs-24"><i class="fal fa-bars"></i></span> 
 					</button>
 				</div>
 				<div class="collapse navbar-collapse mt-3 mt-lg-0" id="primaryMenu06">
 					<ul class="navbar-nav hover-menu main-menu px-0 mx-lg-n4">
-
-						<li class="nav-item py-2 py-lg-5 px-0 px-lg-4">
+						
+						{{-- <li class="nav-item py-2 py-lg-5 px-0 px-lg-4"> 
 							<a class="nav-link p-0" href="{{ route('frontend.index') }}">Home</a>
-						</li>
+						</li> --}}
 
-						<li class="nav-item py-2 py-lg-5 px-0 px-lg-4">
+						{{-- <li class="nav-item py-2 py-lg-5 px-0 px-lg-4"> 
 							<a class="nav-link p-0" href="{{ route('frontend.abouts') }}">About Us</a>
+						</li>  --}}
+
+						<li class="nav-item py-2 py-lg-5 px-0 px-lg-4"> 
+							<a class="nav-link p-0" href="{{ route('location.property') }}">Destinations</a>
 						</li>
 
-						<li class="nav-item py-2 py-lg-5 px-0 px-lg-4">
-							<a class="nav-link p-0" href="{{ route('location.property') }}">All Properties</a>
-						</li>
-
-						{{-- <li class="nav-item py-2 py-lg-5 px-0 px-lg-4">
+						{{-- <li class="nav-item py-2 py-lg-5 px-0 px-lg-4"> 
 							<a class="nav-link p-0" href="index.php#explore">Explore</a>
 						</li> --}}
-						<li class="nav-item py-2 py-lg-5 px-0 px-lg-4">
+						{{--<li class="nav-item py-2 py-lg-5 px-0 px-lg-4"> 
 							<a class="nav-link p-0" href="{{ route('frontend.contact.us') }}">Contact Us</a>
-						</li>
-						<li class="nav-item py-2 py-lg-5 px-0 px-lg-4">
+						</li>--}}
+						<li class="nav-item py-2 py-lg-5 px-0 px-lg-4"> 
 							<a class="nav-link p-0" href="{{ route('frontend.partner.listing') }}">Partner Listings</a>
 						</li>
 						@if(auth()->check())
 						@role(['Traveller','Owner'])
-						<li class="nav-item py-2 py-lg-5 px-0 px-lg-4">
+						<li class="nav-item py-2 py-lg-5 px-0 px-lg-4"> 
 							<a class="nav-link p-0" href="@if(auth()->user()->getRoleNames()->first() =='Traveller'){{route('traveller.dashboard')}}@else {{route('owner.dashboard')}} @endif">Dashboard</a>
 						</li>
-						@elserole()
-						<li class="nav-item py-2 py-lg-5 px-0 px-lg-4">
-							<a class="nav-link p-0" data-toggle="modal" href="#login-register-modal">Owner Login</a>
+						@elserole(['super-admin'])
+						<li class="nav-item py-2 py-lg-5 px-0 px-lg-4"> 
+							<a class="nav-link p-0" data-toggle="modal" href="#login-register-modal"> Login/Sign Up</a>
 						</li>
 						@endrole
 						@else
-							<li class="nav-item py-2 py-lg-5 px-0 px-lg-4">
-								<a class="nav-link p-0" data-toggle="modal" href="#login-register-modal">Owner Login</a>
+							<li class="nav-item py-2 py-lg-5 px-0 px-lg-4"> 
+								<a class="nav-link p-0" data-toggle="modal" href="#login-register-modal"> Login/Sign Up</a>
 							</li>
 						@endif
 						<li class="nav-item">
@@ -86,7 +86,7 @@
 								</div>
 								<span class="username_error text-danger"></span>
 							</div>
-
+							
 							<div class="form-group mb-4">
 								<label for="password" class="sr-only">Password</label>
 								<div class="input-group input-group-lg">
@@ -420,7 +420,7 @@
 										</div>
 										</div>
 									</div>
-									<span class="password_error text-danger"></span>
+									<span class="password_error text-danger"></span>                               
 								</div>
 								<div class="col-md-6">
 									<div class="form-group mb-4">
@@ -439,7 +439,7 @@
 										</div>
 										</div>
 									</div>
-									<span class="cnf_password_error text-danger"></span>
+									<span class="cnf_password_error text-danger"></span>   
 								</div>
 							</div>
 							<div class="d-flex p-2 border re-capchar align-items-center mb-4">
@@ -447,11 +447,11 @@
 								<input class="form-check-input" type="checkbox" value="1" id="verify" name="verify" >
 									<label class="form-check-label" for="verify">I'm not a robot</label>
 								</div>
-							</div>
-							<span class="verify_error text-danger"></span>
+							</div>    
+							<span class="verify_error text-danger"></span>                     
 							<button type="submit" class="btn btn-primary btn-lg btn-block onwer-register">Sign up</button>
 						</form>
-						<div class="mt-2">By creating an account, you agree to My BNB Rentals
+						<div class="mt-2">By creating an account, you agree to My BNB Rentals Terms of Use and Privacy Policy. You also agree to receive mobile text alerts and notifications.
 							<a class="text-heading" href="javascript:void(0)"><u>Terms of Use</u> </a> and
 							<a class="text-heading" href="javascript:void(0)"><u>Privacy Policy</u></a>.
 						</div>
@@ -461,3 +461,4 @@
 		</div>
 	</div>
 </div>
+   

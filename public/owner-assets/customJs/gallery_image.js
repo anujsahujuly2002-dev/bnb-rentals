@@ -20,7 +20,7 @@ function image_select() {
 function image_show() {
     var img = "";
     images.forEach((i) => {
-        img += `<div class="image_container d-flex justify-content-center position-relative">
+        img += `<div class="image_container">
         <img src="${i.url}" alt="Image" srcset="">
         <span class="position-absolute" onclick=delete_image(${images.indexOf(
             i
@@ -186,7 +186,7 @@ showImage = async (property_id)=>{
         if(response.status==200){
             var img = '';
             for(let index in results.data){
-                img +=`<div class="image_container d-flex justify-content-center position-relative" id='${results.data[index].id}'>
+                img +=`<div class="image_container" id='${results.data[index].id}'>
                 <img src="${results.data[index].url}" alt="Image" srcset="">
                 <span class="position-absolute" onclick=deleteImage(${results.data[index].property_id},${results.data[index].id})>&times;</span>
                 </div>` 

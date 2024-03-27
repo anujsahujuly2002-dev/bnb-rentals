@@ -21745,7 +21745,7 @@ height: 300px;
 .sabivideo_wrapper iframe,
 .sabivideo_wrapper::after {
     position: absolute;
-    top: 0;
+    top: -60px;
     width: 100%;
     left: 0;
 }
@@ -21815,9 +21815,91 @@ height: 300px;
     font-style: italic;
     font-size: 10px;
 }
+a.ytp-watermark.yt-uix-sessionlink {
+  display: none;
+}
 
+.listyourproperty .col {
+    margin-top: 30px;
+}
+.boxstyle {
+    text-align: center;
+    height: 100%;
+    background: #ffffff;
+    padding: 20px;
+    box-shadow: 0px 0px 5px #00000014;
+    border-radius: 8px;
+}
+.boxstyle strong {
+    font-size: 20px;
+    font-weight: 800;
+    color: #0ec6d5;
+    line-height: 22px;
+    margin-bottom: 10px;
+    display: block;
+}
+.boxstyle p {
+    margin: 0px;
+}
 
+.whychoose {
+    margin-top: 50px;
+    background: #f5f5f5;
+    padding-bottom: 50px;
+}
+form.property-search {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 9;
+}
+.listyourproperty h6 {
+    line-height: 26px;
+}
 
+.how-it-works {
+    background: #e8f0f3;
+    padding: 50px 0px;
+    text-align: center;
+}
+.how-it-works h3 {
+    margin-bottom: 40px;
+}
+.how-it-works .step{width:286px;min-height:100px;text-align:center;display:inline-block;padding:10px 10px 0;vertical-align:top;position:relative}@media (max-width:767px){ .section-content h4{font-size:18px}.how-it-works .step{width:100%;margin-bottom:30px}}@media (min-width:768px) and (max-width:991px){.how-it-works .step:nth-last-child(n+3){margin-bottom:30px}}.how-it-works .step .line{height:1px;width:100%;right:0;background:#fff;position:absolute;top:60px}.how-it-works .step .line.right{width:50%;right:0}.how-it-works .step .line.left{width:50%;left:0}@media (max-width:1159px){.how-it-works .step .line{display:none}}.how-it-works .step .circle{display:block;margin:0 auto;width:100px;height:100px;border-radius:50%;background:#fff;text-align:center}.how-it-works .step .circle .number{font-size:45px;display:block;position:relative;top:10px}.how-it-works .step .content{text-align:left;padding-left:60px;vertical-align:middle;max-width:330px;font-size:15px;margin:25px auto 0}.how-it-works .step .content .icon{position:absolute;margin-left:-60px;display:block;width:50px;height:45px}.how-it-works .step .content .icon.icon-pen{background:url(https://www.mybnbrentals.com/public/frontend-assets/img/icon-pen.svg) top center no-repeat}.how-it-works .step .content .icon.icon-money{background:url(https://www.mybnbrentals.com/public/frontend-assets/img/icon-money.svg) top center no-repeat}.how-it-works .step .content .icon.icon-contact{background:url(https://www.mybnbrentals.com/public/frontend-assets/img/icon-envelope.svg) top center no-repeat}
 
+.how-it-works .step .content .icon.icon-looking-glass{background:url(https://www.mybnbrentals.com/public/frontend-assets/img/icon-looking-glass.svg) top center no-repeat}
 
+.featureyourproperty {
+    margin: 50px 0;
+    background: url(https://www.mybnbrentals.com/public/frontend-assets/img/featureyourproperty.jpg) no-repeat;
+    padding: 20px 40px;
+    border-radius: 500px;
+    background-size: cover;
+    background-position: top center;
+    background-attachment: fixed;
+    color: #fff;
+}
+.featureyourproperty h2 {
+    text-align: center;
+    color: #fff;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+.featureyourproperty strong {
+    font-size: 22px;
+    font-weight: 500;
+}
+.textstyle h2 {
+    margin-bottom: 22px;
+}
+.textstyle h2 span {
+    font-weight: 600;
+    font-size: 44px;
+    font-style: italic;
+    color: #0ec6d5;
+}
 
+ul.listnu {
+    list-style: decimal;
+}

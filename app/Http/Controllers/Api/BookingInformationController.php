@@ -270,7 +270,16 @@ class BookingInformationController extends Controller
         })->where('status','confirmed')->get();
         // dd($paymentTransaction);
         foreach($paymentTransaction as $booking):
-            $bookingList[] = [
+            if(auth()->user()->roles()->first()->name=='Owner'):
+                $userInfor=[
+                    'user_id'=>$booking->user()?$booking->user->id:null,
+                    'user_name'=>$booking->user()?$booking->user->name:null,
+                    'user_mobile'=>$booking->user()?$booking->user->phone:null,
+                    'user_email'=>$booking->user()?$booking->user->email:null,
+                    'user_pic'=> $booking->user()?($booking->user->image !=null?url('public/storage/profile_image/'.$booking->user->image):null):null,
+                ];
+            endif;
+            $bookings = [
                 'id'=>$booking->id,
                 'property_name'=>$booking->property->property_name,
                 'property_image'=>url('public/storage/upload/property_image/main_image/'.$booking->property->property_main_photos),
@@ -281,6 +290,9 @@ class BookingInformationController extends Controller
                 'dues_amount'=>$booking->dues_amount,
                 'next_payment_date'=>$booking->next_payment_date
             ];
+
+            $both=array_merge($bookings,$userInfor);
+            array_push($bookingList, $both);
         endforeach;
         return response()->json([
             'status'=>true,

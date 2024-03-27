@@ -3,8 +3,8 @@
 <main id="content">
     <section>
         <div class="container">
-            <form class="property-search position-relative d-none d-lg-block" action="{{route('frontend.property.listing')}}">
-                <div class="row align-items-center ml-lg-0 py-lg-0 shadow-sm-2 rounded bg-white position-lg-absolute top-lg-n50px py-lg-2 py-6 px-3 w-md-100" data-animate="fadeInDown" id="accordion-3">
+            <form class="property-search d-none d-lg-block" action="{{route('frontend.property.listing')}}">
+                <div class="row align-items-center ml-lg-0 py-lg-0 shadow-sm-2 bg-white py-lg-2 py-6 px-3 w-md-100" data-animate="fadeInDown" id="accordion-3">
                     <div class="col-md-6 col-lg-3 order-1">
                         <label class="text-uppercase font-weight-500 letter-spacing-093 mb-1">Destination Or Listing Id</label>
                         <div class="position-relative">
@@ -34,7 +34,7 @@
             </form>
         </div>
     </section>
-    <section style="height: 100vh">
+    <section style="height: 80vh">
         
         <div class="sabivideo_wrapper d-none d-lg-block">
             <iframe src="https://www.youtube.com/embed/eyDksYyi7is?playlist=eyDksYyi7is&rel=0&loop=1&autoplay=1&mute=1&controls=0&rel=0&showinfo=0"></iframe>
