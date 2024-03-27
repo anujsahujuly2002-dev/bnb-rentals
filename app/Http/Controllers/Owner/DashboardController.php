@@ -47,11 +47,11 @@ class DashboardController extends Controller
         $totalBooking = BookingInformation::whereIn('property_id',$propertyIds)->whereHas('bookingTransactionHistory',function($q) {
             $q->where('status','success');
         })->where('status','confirmed')->count();
-       
-        
+
+
         BookingInformation::whereIn('property_id',$propertyIds)->where('status','confirmed')->each(function ($p,$k) use (&$totalPayments){
             $totalPayments +=$p->bookingTransactionHistory()->where('status','success')->sum('pay_amount');
-        }); 
+        });
 
         $totalReviews = PropertyReviewsRating::whereIn('property_id',$propertyIds)->count();
         return view('owner.dashboard',compact('totalProperty','totalBooking','totalPayments','totalReviews'));
@@ -75,7 +75,7 @@ class DashboardController extends Controller
         $cities="";
         $sub_cities="";
         if(!is_null($propert_id)){
-            $propertyListing = PropertyListing::where("id",decrypt($propert_id))->first();
+            $propertyListing = PropertyListing::where("id",base64_decode($propert_id))->first();
             $states = State::where('country_id',$propertyListing->country_id)->get();
             $regions = Region::where('state_id',$propertyListing->state_id)->get();
             $cities = City::where('region_id',$propertyListing->region_id)->get();
@@ -106,7 +106,7 @@ class DashboardController extends Controller
                     return '<img src="'.url('public/storage/upload/property_image/main_image/'.$row->property_main_photos).'" class=" rounded-circle mr-3" height="50" width="50">';
                 })
                 ->addColumn('action', function($row){
-                    $actionBtn = '<a href="'.route('owner.create.property',['id'=>encrypt($row->id)]).'" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm" onclick="propertyDelete('.$row->id.')">Delete</a>';
+                    $actionBtn = '<a href="'.route('owner.create.property',['id'=>base64_encode($row->id)]).'" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm" onclick="propertyDelete('.$row->id.')">Delete</a>';
                     return $actionBtn;
                 })
                 ->addColumn('status',function($row) {
@@ -183,7 +183,7 @@ class DashboardController extends Controller
     public function chat(){
         return view('owner.chat');
     }
-    
+
     public function cancelBooking(Request $request) {
         if($request->ajax()):
             $paymentTransaction = CancelBooking::when(auth()->user()->roles()->first()->name=='Traveller',function($traveller){
